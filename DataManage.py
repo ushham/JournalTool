@@ -50,7 +50,17 @@ class DataManage:
             elif self.feel in line:
                 score = line.replace(self.feel, '').strip('\n')
 
-        return [data_date, tit, stat.split(', '), tag.split(', '), mod.split(', '), int(score)]
+        #Create dictionary
+        dic = {
+            'Date': data_date.isoformat(),
+            'File': file.replace(ct.folder, ''),
+            'Title': tit.capitalize(),
+            'Status': [s.capitalize() for s in stat.split(', ')],
+            'Tags': [t.capitalize() for t in tag.split(', ')],
+            'Mood': [m.capitalize() for m in mod.split(', ')],
+            'Score': int(score)
+            }
+        return dic
 
     def make_base(self):
         #open all files and read
@@ -62,8 +72,40 @@ class DataManage:
                 data = open(f)
                 line = self.parse_data(f, data)
                 hold.append(line)
-        return hold
+
+        #Write database
+        with open(ct.folder + ct.data_b, 'w') as f:
+            json.dump(hold, f)
+        return 0
+
+    def open_base(self):
+        with open(ct.folder + ct.data_b, 'r') as f:
+            data = f.read()
+        
+        data = json.loads(data)
+        return data
+
+    def list_data(self, data):
+        data_base = data
+
+        #Find all status
+        status = [s['Status'] for s in data_base]
+        status = [item for sublist in status for item in sublist]
+        status = list(set(status))
+
+        #Find all Tags
+        tags = [t['Tags'] for t in data_base]
+        tags = [item for sublist in tags for item in sublist]
+        tags = list(set(tags))
+        return status, tags
+
+    def filter_data(self, start='', end=''):
+        data_base = self.open_base()
+        return 0
+
+
+
 
 x = DataManage(1)
-y = x.make_base()
-print(y)
+print(x.list_data(x.open_base()))
+
