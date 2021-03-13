@@ -1,3 +1,4 @@
 folder = '/Users/ushhamilton/Documents/02 Journals/Journals/'
 temp = 'Template.md'
+data_b = 'JournalDatabase.json'
 ext = '.md'
