@@ -102,10 +102,3 @@ class DataManage:
     def filter_data(self, start='', end=''):
         data_base = self.open_base()
         return 0
-
-
-
-
-x = DataManage(1)
-print(x.list_data(x.open_base()))
-

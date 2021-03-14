@@ -39,24 +39,21 @@ class FileManage:
         
         return 0
 
-    def copytemplate(self, date):
+    def copytemplate(self, title, date=dt.datetime.now()):
         #Given date, copys template to location and saves with name and opens
         year, month, day, m_name = date.strftime('%Y'), date.strftime('%m'), date.strftime('%d'), date.strftime('%b')
         name = year[2:] + month + day
-        title = input('Journal name: ')
-        name = name + ' ' + title + self.ext
-        
-        path = ct.folder + year + '/' + month + ' ' + m_name 
-        if not os.path.exists(path):
-            self.makefolder(date)
+        if title != '':
+            name = name + ' ' + title + self.ext
+            
+            path = ct.folder + year + '/' + month + ' ' + m_name 
+            if not os.path.exists(path):
+                self.makefolder(date)
 
-        print(path)
-        shutil.copy(ct.folder + ct.temp, path)
-        os.rename(path + '/' + ct.temp, path + '/' + name)
-        self.openfile(year + '/' + month + ' ' + m_name + '/' + name)
+            shutil.copy(ct.folder + ct.temp, path)
+            os.rename(path + '/' + ct.temp, path + '/' + name)
+            self.openfile(year + '/' + month + ' ' + m_name + '/' + name)
         return 0
 
 
-x = FileManage(1)
-d = dt.datetime.now()
-x.copytemplate(d)
+
