@@ -55,5 +55,10 @@ class FileManage:
             self.openfile(year + '/' + month + ' ' + m_name + '/' + name)
         return 0
 
+    def open_loc(self, date=dt.datetime.today()):
+        year, month, m_name = date.strftime('%Y'), date.strftime('%m'), date.strftime('%b')
+        path = ct.folder + year + '/' + month + ' ' + m_name
+        subprocess.run(['open', path], check=True)
+
 
 
