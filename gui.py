@@ -36,7 +36,7 @@ class gui:
         #Open todays folder
         frame = tk.Frame(master=window, relief=tk.RAISED)
         frame.grid(row=1, column=3, padx=10, pady=10)
-        cust_jrn = ttk.Button(master=frame, text="Open Folder")
+        cust_jrn = ttk.Button(master=frame, text="Open Folder", command=self.filer.open_loc)
         cust_jrn.pack(padx=10, pady=10)
     
     def run(self, date=dt.datetime.today()):
@@ -57,14 +57,15 @@ class gui:
         
 
     def cal_pop(self):
+        #pop up calculator to choose date
         def save_date():
             top.destroy()
             self.run(cal.selection_get())
 
         top = tk.Toplevel(self.window)
         cal = Calendar(top, font="Arial 14", selectmode='day', locale='en_US',
-                    cursor="hand1")
-        date = cal.datetime.today()
+                    cursor="hand2")
+        cal.datetime.today()
 
         cal.pack(fill="both", expand=True)
 

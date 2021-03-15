@@ -79,13 +79,35 @@ class DataManage:
         return 0
 
     def open_base(self):
+        #Opens and reads json database
         with open(ct.folder + ct.data_b, 'r') as f:
             data = f.read()
         
         data = json.loads(data)
         return data
 
+    def updt_base(self):
+        #Updates exisiting database
+        #Used to update day to day rarther than full update
+        data = self.open_base()
+        files = self.listall()
+        prev = [f['File'] for f in data]
+
+        #Removes files already in database
+        completed = [f for f in files if f.replace(ct.folder, '') not in prev]
+    
+        for f in completed:
+            if ct.temp not in f:
+                newd = open(f)
+                line = self.parse_data(f, newd)
+                data.append(line)
+
+        with open(ct.folder + ct.data_b, 'w') as f:
+            json.dump(data, f)
+        return 0
+
     def list_data(self, data):
+        #Given json database makes a list of unique entries of tag and status
         data_base = data
 
         #Find all status
@@ -94,11 +116,21 @@ class DataManage:
         status = list(set(status))
 
         #Find all Tags
-        tags = [t['Tags'] for t in data_base]
-        tags = [item for sublist in tags for item in sublist]
-        tags = list(set(tags))
-        return status, tags
+        tags = [(t['Tags'], t['Status']) for t in data_base]
+        tagged = [(t, tup[1][0]) for tup in tags for t in tup[0]]
+        tagged = list(set(tagged))
+        return tagged, status
 
-    def filter_data(self, start='', end=''):
+    def filter_data(self, start=dt.datetime(2021, 3, 1, 0, 0, 0), end=dt.datetime.today()):
         data_base = self.open_base()
-        return 0
+        dates = [dt.datetime.fromisoformat(f['Date']) for f in data_base]
+        dates = [date for date in dates if (date >= start) and (date <= end)]
+        return dates
+
+#Convert everything to date rather than datetime
+x = DataManage(1)
+st = dt.date.today()
+print(dt.datetime(2021, 3, 15, 0, 0, 0) == st)
+print(st)
+
+
