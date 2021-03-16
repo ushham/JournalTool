@@ -15,6 +15,7 @@ class gui:
         self.initialise()
 
     def initialise(self):
+        #create full gui
         for i in range(3):
             window.columnconfigure(i, weight=1, minsize=10)
 
@@ -40,11 +41,10 @@ class gui:
         cust_jrn.pack(padx=10, pady=10)
     
     def run(self, date=dt.datetime.today()):
-        #make popout with textbox
-        def closeme():
+        #make popout with textbox to get title of journal
+        def closeme(event=None):
             name = entry.get()
             newwin.destroy()
-            print('here ' + name)
             self.filer.copytemplate(name, date)
 
         newwin = tk.Tk()
@@ -52,7 +52,10 @@ class gui:
         entry = tk.Entry(newwin)
         entry.pack()
 
-        but = tk.Button(newwin, text='ok', command=closeme)
+        newwin.bind('<Return>', closeme)
+
+        but = tk.Button(newwin, text='ok')
+        but.bind('<Button-1>', closeme)
         but.pack()
         
 
@@ -65,7 +68,7 @@ class gui:
         top = tk.Toplevel(self.window)
         cal = Calendar(top, font="Arial 14", selectmode='day', locale='en_US',
                     cursor="hand2")
-        cal.datetime.today()
+        cal.date.today()
 
         cal.pack(fill="both", expand=True)
 
