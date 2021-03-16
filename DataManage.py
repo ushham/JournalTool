@@ -5,10 +5,10 @@ import control as ct
 
 class DataManage:
     title = '# '
-    status = 'Status: '
-    tags = 'Tags: '
-    mood = 'Mood: '
-    feel = 'Score: '
+    status = 'Status:'
+    tags = 'Tags:'
+    mood = 'Mood:'
+    feel = 'Score:'
 
     def __init__(self, day):
         self.date = day
@@ -28,7 +28,7 @@ class DataManage:
     def parse_data(self, file, data):
         #Extract date, assuming first 6 letters are the date and we are in the 21st centuary
         data_date = file.split('/')[-1][:6]
-        data_date = dt.datetime.strptime(str(20) + data_date, '%Y%m%d')
+        data_date = dt.datetime.strptime(str(20) + data_date, '%Y%m%d').date()
 
         lines = data.readlines()
         count = 0
@@ -36,28 +36,28 @@ class DataManage:
             count += 1
             #Extract journal status
             if (self.title in line) & (count == 1):
-                tit = line.replace(self.title, '').strip('\n')
+                tit = line.replace(self.title, '')
             elif self.status in line:
-                stat = line.replace(self.status, '').strip('\n')
-            
+                stat = line.replace(self.status, '')
             #Extract journal tags
             elif self.tags in line:
-                tag = line.replace(self.tags, '').strip('\n')
+                tag = line.replace(self.tags, '')
 
             elif self.mood in line:
-                mod = line.replace(self.mood, '').strip('\n')
+                mod = line.replace(self.mood, '')
             
             elif self.feel in line:
-                score = line.replace(self.feel, '').strip('\n')
+                score = line.replace(self.feel, '')
 
         #Create dictionary
+        
         dic = {
             'Date': data_date.isoformat(),
             'File': file.replace(ct.folder, ''),
-            'Title': tit.capitalize(),
-            'Status': [s.capitalize() for s in stat.split(', ')],
-            'Tags': [t.capitalize() for t in tag.split(', ')],
-            'Mood': [m.capitalize() for m in mod.split(', ')],
+            'Title': tit.capitalize().strip(),
+            'Status': [s.capitalize().strip() for s in stat.split(', ')],
+            'Tags': [t.capitalize().strip() for t in tag.split(', ')],
+            'Mood': [m.capitalize().strip() for m in mod.split(', ')],
             'Score': int(score)
             }
         return dic
@@ -121,7 +121,7 @@ class DataManage:
         tagged = list(set(tagged))
         return tagged, status
 
-    def filter_data(self, start=dt.datetime(2021, 3, 1, 0, 0, 0), end=dt.datetime.today()):
+    def filter_data(self, start=dt.date(2021, 3, 1), end=dt.date.today()):
         data_base = self.open_base()
         dates = [dt.datetime.fromisoformat(f['Date']) for f in data_base]
         dates = [date for date in dates if (date >= start) and (date <= end)]
@@ -129,8 +129,7 @@ class DataManage:
 
 #Convert everything to date rather than datetime
 x = DataManage(1)
-st = dt.date.today()
-print(dt.datetime(2021, 3, 15, 0, 0, 0) == st)
-print(st)
+x.make_base()
+
 
 
