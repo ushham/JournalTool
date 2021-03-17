@@ -10,9 +10,6 @@ class DataManage:
     mood = 'Mood:'
     feel = 'Score:'
 
-    def __init__(self, day):
-        self.date = day
-
     def listall(self):
         #List all files in subfolders
         locs = os.walk(ct.folder)
@@ -54,10 +51,10 @@ class DataManage:
         dic = {
             'Date': data_date.isoformat(),
             'File': file.replace(ct.folder, ''),
-            'Title': tit.capitalize().strip(),
-            'Status': [s.capitalize().strip() for s in stat.split(', ')],
-            'Tags': [t.capitalize().strip() for t in tag.split(', ')],
-            'Mood': [m.capitalize().strip() for m in mod.split(', ')],
+            'Title': tit.strip().capitalize(),
+            'Status': [s.strip().capitalize() for s in stat.split(', ')],
+            'Tags': [t.strip().capitalize() for t in tag.split(', ')],
+            'Mood': [m.strip().capitalize() for m in mod.split(', ')],
             'Score': int(score)
             }
         return dic
@@ -68,7 +65,7 @@ class DataManage:
         files = self.listall()
         hold = []
         for f in files:
-            if ct.temp not in f:
+            if ct.temp not in f and ct.temp_folder not in f:
                 data = open(f)
                 line = self.parse_data(f, data)
                 hold.append(line)
@@ -121,15 +118,38 @@ class DataManage:
         tagged = list(set(tagged))
         return tagged, status
 
-    def filter_data(self, start=dt.date(2021, 3, 1), end=dt.date.today()):
+    def item_in_list(self, sublist, full_list, tag_input=True, exact=False):
+        #given a sublist, check if any of these elements are in the list
+        if tag_input:
+            res_list = [i for i in sublist for j in full_list if (i in j) and ((i != '') or not(exact))]
+        else:
+            res_list = [i for i in sublist if i in full_list]
+        check = len(res_list) > 0
+        return check
+
+    def filter_data(self, start=dt.date(2021, 3, 1), end=dt.date.today(), tags=[], status=[]):
+        #Given dates, sort dates and retrieve dates, path and title and pack as tuple
+        #Make list of dates
+        exact = True
+        def conv_date(s):
+            return dt.datetime.strptime(s, '%Y-%m-%d').date()
         data_base = self.open_base()
-        dates = [dt.datetime.fromisoformat(f['Date']) for f in data_base]
+        dates = [dt.date.fromisoformat(f['Date']) for f in data_base]
         dates = [date for date in dates if (date >= start) and (date <= end)]
-        return dates
 
-#Convert everything to date rather than datetime
-x = DataManage(1)
-x.make_base()
+        if (tags == []) or (status == []):
+            pulled_data = self.list_data(data_base)
 
+        if (tags == []):
+            tags = pulled_data[0]
+            exact = False
+        
+        if (status == []):
+            status = pulled_data[1]
 
+        filt_list = [(conv_date(l['Date']), l['File'], l['Title'], l['Tags']) for l in data_base if 
+        (conv_date(l['Date']) in dates) and 
+        self.item_in_list(l['Tags'], tags, exact=exact) and 
+        self.item_in_list(l['Status'], status, False)]
 
+        return filt_list
