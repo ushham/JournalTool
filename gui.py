@@ -1,5 +1,5 @@
 import FileManage as fm
-# import DataManage as dm
+import DataManage as dm
 # import control as ct
 import tkinter as tk
 import datetime as dt
@@ -9,6 +9,7 @@ from tkcalendar import Calendar, DateEntry
 
 class gui:
     filer = fm.FileManage(0)
+    datar = dm.DataManage()
     def __init__(self, window):
         self.window = window
 
@@ -57,7 +58,7 @@ class gui:
         but = tk.Button(newwin, text='ok')
         but.bind('<Button-1>', closeme)
         but.pack()
-        
+        return 0    
 
     def cal_pop(self):
         #pop up calculator to choose date
@@ -77,9 +78,35 @@ class gui:
 
         return 0
 
+    def tags_pop(self):
+        #Create popout to list all tags to choose from
+        def save_tags():
+            res = [(t, var.get()) for t, var in output.items()]
+            tag_win.destroy()
+            print(res)
+        
+        tag_win = tk.Toplevel()
+        tag_win.title('Tag Choices')
+
+        tags, status = self.datar.list_data(self.datar.open_base())
+        tg = [r[0] + ' [' + r[1] + ']' for r in tags]
+
+        output = {}
+
+        #Make Checkboxes
+        for t in tg:
+            var = tk.IntVar()
+            l = tk.Checkbutton(tag_win, text=t, variable=var, onvalue=1, offvalue=0)
+            output[t] = var
+            l.pack(anchor='w')
+        btn = tk.Button(tag_win, text='ok', command=save_tags)
+        btn.pack()
+        return 0
+
 
 
 window = tk.Tk()
 window.title('')
 x = gui(window)
+x.tags_pop()
 window.mainloop()

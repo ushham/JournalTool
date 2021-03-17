@@ -7,8 +7,6 @@ import control as ct
 
 class FileManage:
 
-    ext = '.md'
-
     def __init__(self, day):
         self.date = day
 
@@ -44,7 +42,7 @@ class FileManage:
         year, month, day, m_name = date.strftime('%Y'), date.strftime('%m'), date.strftime('%d'), date.strftime('%b')
         name = year[2:] + month + day
         if title != '':
-            name = name + ' ' + title + self.ext
+            name = name + ' ' + title + ct.ext
             
             path = year + '/' + month + ' ' + m_name 
             if not os.path.exists(ct.folder + path):
@@ -82,5 +80,3 @@ class FileManage:
                 hold_str  = hold_str + line
             count += 1
         return hold_str
-
-
