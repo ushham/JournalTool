@@ -2,6 +2,7 @@ import json
 import os
 import datetime as dt
 import control as ct
+import matplotlib.pyplot as plt
 
 class DataManage:
     title = '# '
@@ -152,4 +153,19 @@ class DataManage:
         self.item_in_list(l['Tags'], tags, exact=exact) and 
         self.item_in_list(l['Status'], status, False)]
 
+        return filt_list
+
+    def data_from_tags(self, tags, status=[]):
+        #given tags and maybe a status, return all (dates, path, title)
+        def conv_date(s):
+            return dt.datetime.strptime(s, '%Y-%m-%d').date()
+
+        data_base = self.open_base()
+        if status == []:
+            status = self.list_data(data_base)[1]
+
+        filt_list = [(conv_date(l['Date']), l['File'], l['Title'], l['Tags']) for l in data_base if
+        (self.item_in_list(l['Tags'], tags, exact=True)) and
+        (self.item_in_list(l['Status'], status, False))]
+ 
         return filt_list

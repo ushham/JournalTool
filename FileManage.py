@@ -7,9 +7,6 @@ import control as ct
 
 class FileManage:
 
-    def __init__(self, day):
-        self.date = day
-
     def openfile(self, path):
         file_name = ct.folder + path
         subprocess.run(['open', file_name], check=True)
