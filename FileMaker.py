@@ -6,7 +6,7 @@ import DataManage as dm
 import control as ct
 
 class FileMake:
-    filer = fm.FileManage(0)
+    filer = fm.FileManage()
     datar = dm.DataManage()
     days_per_month = 30
     days_per_week = 7
@@ -58,10 +58,12 @@ class FileMake:
         self.combinefile('My Year', dates, rev=True)
         return 0
 
-    def makeperiod(self, period, name, my_date=dt.date.today()):
+    def makeperiod(self, period, name='Custom', my_date=dt.date.today()):
         def conv_date(s):
             return dt.datetime.strptime(s, '%Y-%m-%d').date()
 
+        if period == None:
+            period = self.days_per_week
         data_base = self.datar.open_base()
 
         dates = [(conv_date(d['Date']), d['File'], d['Title']) for d in data_base if 
@@ -71,3 +73,4 @@ class FileMake:
 
         self.combinefile('My ' + name, dates, rev=True)
         return 0
+
