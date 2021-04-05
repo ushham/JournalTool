@@ -45,22 +45,24 @@ class gui:
         cust_jrn = ttk.Button(master=frame, text="Open Folder", command=self.filer.open_loc)
         cust_jrn.pack(padx=10, pady=10)
 
-        #Tags popout
-        frame = tk.Frame(master=self.window, relief=tk.RAISED)
-        frame.grid(row=2, column=1, padx=10, pady=10)
-        cust_jrn = ttk.Button(master=frame, text=" Pick Tags ", command=self.tags_pop)
-        cust_jrn.pack(padx=10, pady=10)
-
         #dropdown
         self.tags, self.status = self.datar.list_data(self.datar.open_base())
         self.drop_var = tk.StringVar(self.window)
         self.drop_var.set(self.status[0])
         stat_list = self.status
         stat_list.append('All')
+        stat_list.remove('')
         self.dropdown = tk.OptionMenu(self.window, self.drop_var, *stat_list)
-        self.dropdown.grid(row=2, column=2, padx=10, pady=10)
+        self.dropdown.grid(row=2, column=1, padx=10, pady=10)
+
+        #Tags popout
+        frame = tk.Frame(master=self.window, relief=tk.RAISED)
+        frame.grid(row=2, column=2, padx=10, pady=10)
+        cust_jrn = ttk.Button(master=frame, text=" Pick Tags ", command=self.tags_pop)
+        cust_jrn.pack(padx=10, pady=10)
 
         #Make Database
+        self.datar.make_base()
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
         frame.grid(row=2, column=3, padx=10, pady=10)
         cust_jrn = ttk.Button(master=frame, text=" Make Database ", command=self.mk_db)
@@ -164,8 +166,13 @@ class gui:
 
     def my_year(self):
         def print_year():
+            #Find current Status choice
+            stat_choose = self.drop_var.get()
+            if stat_choose == '':
+                stat_choose = 'All'
+
             top.destroy()
-            self.faker.makeyear(my_date=cal.selection_get())
+            self.faker.makeyear(stat_choose, my_date=cal.selection_get())
 
         top = tk.Toplevel(self.window)
         cal = Calendar(top, font="Arial 14", selectmode='day', locale='en_US',
@@ -181,10 +188,15 @@ class gui:
 
     def my_period(self):
         def print_period(event=None):
+            #Find current Status choice
+            stat_choose = self.drop_var.get()
+            if stat_choose == '':
+                stat_choose = 'All'
+                
             days = fill.get()
             top.destroy()
             val = int(days) if days != '' else None
-            self.faker.makeperiod(period=val, my_date=cal.selection_get())
+            self.faker.makeperiod(period=val, stat=stat_choose, my_date=cal.selection_get())
 
         top = tk.Toplevel(self.window)
         cal = Calendar(top, font="Arial 14", selectmode='day', locale='en_US',
@@ -205,7 +217,7 @@ class gui:
 
     def mk_db(self):
         #Refresh database and refresh gui
-        self.datar.make_base()
+        self.datar.updt_base()
         self.window.destroy()
         self.__init__()
 

@@ -30,7 +30,7 @@ class Visualise:
 
         ave_score = []
         #Create list of average scores for each day (used if there are multiple scores / day)
-        for day in range((end_date-start_date).days):
+        for day in range((end_date-start_date).days + 1):
             date = start_date + dt.timedelta(day)
 
             ave_score.append((date, data[idx_tuple(data, 0, date)][-1]))
@@ -58,7 +58,7 @@ class Visualise:
 
         #filter data to extract scores
         score_data = []
-        for day in range((end_date-start_date).days):
+        for day in range((end_date-start_date).days + 1):
             date = start_date + dt.timedelta(day)
 
             #Score from the database
@@ -80,3 +80,7 @@ class Visualise:
         plt.gcf().autofmt_xdate()
         plt.show()
         return score_data
+
+# v = Visualise()
+# p = v.show_score()
+# print(p)
