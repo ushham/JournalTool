@@ -46,6 +46,10 @@ class DataManage:
             
             elif self.feel in line:
                 score = line.replace(self.feel, '')
+                if score != '\n':
+                    score = int(score)
+                else:
+                    score = float('NaN')
 
         #Create dictionary
         
@@ -56,7 +60,7 @@ class DataManage:
             'Status': [s.strip().capitalize() for s in stat.split(', ')],
             'Tags': [t.strip().capitalize() for t in tag.split(', ')],
             'Mood': [m.strip().capitalize() for m in mod.split(', ')],
-            'Score': int(score)
+            'Score': score
             }
         return dic
 
