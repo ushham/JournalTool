@@ -2,7 +2,6 @@ import json
 import os
 import datetime as dt
 import control as ct
-import matplotlib.pyplot as plt
 
 class DataManage:
     title = '# '
@@ -132,7 +131,7 @@ class DataManage:
         check = len(res_list) > 0
         return check
 
-    def filter_data(self, start=dt.date(2021, 3, 1), end=dt.date.today(), tags=[], status=[]):
+    def filter_data(self, start=ct.first_date, end=dt.date.today(), tags=[], status=[]):
         #Given dates, sort dates and retrieve dates, path and title and pack as tuple
         #Make list of dates
         exact = True
