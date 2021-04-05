@@ -1,16 +1,17 @@
 import FileManage as fm
 import DataManage as dm
 import FileMaker as fmk
+import DataVisualisation as dv
 import tkinter as tk
 import datetime as dt
 from tkinter import ttk
 from tkcalendar import Calendar, DateEntry
 
-
 class gui:
     filer = fm.FileManage()
     datar = dm.DataManage()
     faker = fmk.FileMake()
+    viser = dv.Visualise()
 
     def __init__(self):
         self.window = tk.Tk()
@@ -76,6 +77,12 @@ class gui:
         frame.grid(row=3, column=2, padx=10, pady=10)
         cust_jrn = ttk.Button(master=frame, text="My Period", command=self.my_period)
         cust_jrn.pack(padx=10, pady=10)  
+
+        #graph of scores
+        frame = tk.Frame(master=self.window, relief=tk.RAISED)
+        frame.grid(row=3, column=3, padx=10, pady=10)
+        cust_jrn = ttk.Button(master=frame, text="Graph", command=self.graph_score)
+        cust_jrn.pack(padx=10, pady=10) 
 
         self.window.mainloop()
     
@@ -201,6 +208,10 @@ class gui:
         self.datar.make_base()
         self.window.destroy()
         self.__init__()
+
+    def graph_score(self):
+        self.viser.show_score()
+        return 0
 
 if __name__ == "__main__":
     gui()
