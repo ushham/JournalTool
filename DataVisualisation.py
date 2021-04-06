@@ -43,7 +43,6 @@ class Visualise:
 
         return roll_ave   
             
-
     def show_score(self, start_date=ct.first_date, end_date=dt.date.today()):
         # Opens database and extracts scores between given dates, then displays the data
         def average(lst):
@@ -74,13 +73,64 @@ class Visualise:
 
         avescr = self.wk_rolling(score_data)
 
+        plt.figure('Happyness Score')
+
         plt.plot(*zip(*avescr), color='grey')
         plt.scatter(*zip(*score_data))
         plt.ylim(ct.min_plt, ct.max_plt)
         plt.gcf().autofmt_xdate()
         plt.show()
-        return score_data
+        return 0
 
-# v = Visualise()
-# p = v.show_score()
-# print(p)
+    def graph_use(self, data, status, time_array, start_date=dt.date(2017, 9, 1), end_date=dt.date.today(), rolling = 4):
+        #finds the number of entries made over each month, and compares that to the number of days in each month
+        #Filter data to count the number of records in each month period
+        if status == '':
+            status = 'All'
+        count_hold = []
+
+        for date in time_array:
+            c = sum((dt.date.fromisoformat(item['Date']) >= date[0]) & 
+            (dt.date.fromisoformat(item['Date']) <= date[1]) & ((status in item['Status']) or (status == 'All')) 
+            for item in data)
+
+            count_hold.append((date[0], c / date[2] * 100))
+        
+        plt.figure('Journal Writing %')
+        plt.bar(*zip(*count_hold), width=10)
+        plt.gcf().autofmt_xdate()
+        plt.title(status)
+        plt.show()
+        return 0
+        
+    def stat_maker(self, status, start_date=dt.date(2017, 9, 1), end_date=dt.date.today()):
+        #Open database
+        data = self.manage_data.open_base()
+
+        #Find totals
+
+        #find monthly figures
+        #make an array with the start date of each month, and the number of days in that month
+        def month_list(start_date, end_date):
+            date_hold = [[start_date, None, None]]
+            current_date = start_date
+            prev_date = start_date
+
+            #make a list of all the starting dates in each month
+            while current_date < end_date:
+                if current_date.month != prev_date.month:
+                    date_hold.append([current_date, None, None])
+                
+                prev_date = current_date
+                current_date += dt.timedelta(1)
+
+            #make list of number of days in each period
+            for i in range(len(date_hold[:-1])):
+                date_hold[i][1] = date_hold[i+1][0] - dt.timedelta(1)
+                date_hold[i][2] = (date_hold[i+1][0] - date_hold[i][0]).days
+            date_hold[-1][1] = end_date
+            date_hold[-1][2] = (end_date - date_hold[-1][0]).days + 1
+
+            return date_hold
+        self.graph_use(data, status, month_list(start_date, end_date))
+        return 0
