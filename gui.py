@@ -26,32 +26,34 @@ class gui:
 
         for i in range(10):
             self.window.rowconfigure(i, weight=1, minsize=10)
-        
-        #Make journal for today
-        frame = tk.Frame(master=self.window, relief=tk.RAISED)
-        frame.grid(row=1, column=1, padx=10, pady=10)
-        make_jrn = ttk.Button(master=frame, text="Make Entry", command=self.run)
-        make_jrn.pack(padx=20, pady=10)
+
+        #Find tags and statuses
+        self.tags, self.status = self.datar.list_data(self.datar.open_base())
+        stat_list = ['All']
+        stat_list.extend(self.status)
+        stat_list.remove('')
 
         #Custom date pick option
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
-        frame.grid(row=1, column=2, padx=10, pady=10)
-        cust_jrn = ttk.Button(master=frame, text="Custom Date", command=self.cal_pop)
+        frame.grid(row=1, column=1, padx=10, pady=10)
+        cust_jrn = ttk.Button(master=frame, text=" Journal ", command=self.cal_pop)
         cust_jrn.pack(padx=10, pady=10)
 
         #Open todays folder
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
+        frame.grid(row=1, column=2, padx=10, pady=10)
+        cust_jrn = ttk.Button(master=frame, text="Folder Loc", command=self.filer.open_loc)
+        cust_jrn.pack(padx=10, pady=10)
+
+        #Journal Stats
+        frame = tk.Frame(master=self.window, relief=tk.RAISED)
         frame.grid(row=1, column=3, padx=10, pady=10)
-        cust_jrn = ttk.Button(master=frame, text="Open Folder", command=self.filer.open_loc)
+        cust_jrn = ttk.Button(master=frame, text=" Stats ", command=self.mk_stats)
         cust_jrn.pack(padx=10, pady=10)
 
         #dropdown
-        self.tags, self.status = self.datar.list_data(self.datar.open_base())
         self.drop_var = tk.StringVar(self.window)
         self.drop_var.set(self.status[0])
-        stat_list = self.status
-        stat_list.append('All')
-        stat_list.remove('')
         self.dropdown = tk.OptionMenu(self.window, self.drop_var, *stat_list)
         self.dropdown.grid(row=2, column=1, padx=10, pady=10)
 
@@ -65,7 +67,7 @@ class gui:
         self.datar.make_base()
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
         frame.grid(row=2, column=3, padx=10, pady=10)
-        cust_jrn = ttk.Button(master=frame, text=" Make Database ", command=self.mk_db)
+        cust_jrn = ttk.Button(master=frame, text=" Update ", command=self.mk_db)
         cust_jrn.pack(padx=10, pady=10)
 
         #year popout
@@ -77,13 +79,13 @@ class gui:
         #custom popout
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
         frame.grid(row=3, column=2, padx=10, pady=10)
-        cust_jrn = ttk.Button(master=frame, text="My Period", command=self.my_period)
+        cust_jrn = ttk.Button(master=frame, text=" My Period ", command=self.my_period)
         cust_jrn.pack(padx=10, pady=10)  
 
         #graph of scores
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
         frame.grid(row=3, column=3, padx=10, pady=10)
-        cust_jrn = ttk.Button(master=frame, text="Graph", command=self.graph_score)
+        cust_jrn = ttk.Button(master=frame, text="  Graph  ", command=self.viser.show_score)
         cust_jrn.pack(padx=10, pady=10) 
 
         self.window.mainloop()
@@ -135,6 +137,11 @@ class gui:
             data = self.datar.data_from_tags(res)
             name = ', '.join(res)
             self.faker.combinefile('My Tags: ' + name, data)
+
+        def sort_tuple(tup):  
+            # sorts the first element of tuples alphebetically 
+            tup.sort(key = lambda x: x[0])  
+            return tup  
         
         #Find current Status choice
         stat_choose = self.drop_var.get()
@@ -146,6 +153,7 @@ class gui:
             stat_tags = [t for t in self.tags if stat_choose in t[1]]
 
         #Sort List alphabetically
+        stat_tags = sort_tuple(stat_tags)
 
         tag_win = tk.Toplevel()
         tag_win.title('Tag Choices')
@@ -221,8 +229,8 @@ class gui:
         self.window.destroy()
         self.__init__()
 
-    def graph_score(self):
-        self.viser.show_score()
+    def mk_stats(self):
+        self.viser.stat_maker(self.drop_var.get())
         return 0
 
 if __name__ == "__main__":
