@@ -6,7 +6,6 @@ import control as ct
 import DataManage as dm
 import matplotlib.pyplot as plt
 
-
 class Visualise:
     manage_data = dm.DataManage()
 
@@ -96,7 +95,13 @@ class Visualise:
 
             count_hold.append((date[0], c / date[2] * 100))
         
+        roll_ave = []
+        for d in count_hold:
+            aves = [num[1] for num in count_hold if (num[0] <= d[0]) & (num[0] > d[0]-dt.timedelta(rolling * 30))]
+            roll_ave.append((d[0], sum(aves) / len(aves)))
+
         plt.figure('Journal Writing %')
+        plt.plot(*zip(*roll_ave), color='grey')
         plt.bar(*zip(*count_hold), width=10)
         plt.gcf().autofmt_xdate()
         plt.title(status)
@@ -132,5 +137,10 @@ class Visualise:
             date_hold[-1][2] = (end_date - date_hold[-1][0]).days + 1
 
             return date_hold
+
+        #Make graph of total number of journals
         self.graph_use(data, status, month_list(start_date, end_date))
+
+        #cols = ['Tags', '# Totals', '# Year', '# Month', '# Week']
+
         return 0
