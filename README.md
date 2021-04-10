@@ -6,7 +6,7 @@ control.py is the sheet requires the user to point the code at a specific folder
 
 The code opens a templete markdown file to then copy to the subfolder matching the date.
 
-Required (Written to ensure this would run on apple silicon):
+Required (Written to ensure this would run natively on apple silicon):
 * Python 3
 * Matplotlib
 * tkcalendar
