@@ -6,6 +6,7 @@ import tkinter as tk
 import datetime as dt
 from tkinter import ttk
 from tkcalendar import Calendar, DateEntry
+from tkscrolledframe import ScrolledFrame
 
 class gui:
     filer = fm.FileManage()
@@ -158,6 +159,15 @@ class gui:
         tag_win = tk.Toplevel()
         tag_win.title('Tag Choices')
 
+        #Scrollbar
+        sf = ScrolledFrame(tag_win, width=200, height=300)
+        sf.pack(side='right', expand=10, fill='x')
+
+        sf.bind_arrow_keys(tag_win)
+        sf.bind_scroll_wheel(tag_win)
+
+        inner_frame = sf.display_widget(tk.Frame)
+
         tg = [[r[0] , ' [' + r[1] + ']'] for r in stat_tags]
 
         output = {}
@@ -165,10 +175,10 @@ class gui:
         #Make Checkboxes
         for t in tg:
             var = tk.IntVar()
-            l = tk.Checkbutton(tag_win, text=t[0] + t[1], variable=var, onvalue=1, offvalue=0)
+            l = tk.Checkbutton(inner_frame, text=t[0] + t[1], variable=var, onvalue=1, offvalue=0)
             output[t[0]] = var
             l.pack(anchor='w')
-        btn = tk.Button(tag_win, text='ok', command=save_tags)
+        btn = tk.Button(inner_frame, text='ok', command=save_tags)
         btn.pack()
         return 0
 
