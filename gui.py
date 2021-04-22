@@ -66,6 +66,7 @@ class gui:
 
         #Make Database
         self.datar.make_base()
+        self.datar.word_count()
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
         frame.grid(row=2, column=3, padx=10, pady=10)
         cust_jrn = ttk.Button(master=frame, text=" Update ", command=self.mk_db)

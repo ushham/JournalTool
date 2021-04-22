@@ -1,7 +1,9 @@
 import json
 import os
+import csv
 import datetime as dt
 import control as ct
+from collections import Counter
 
 class DataManage:
     title = '# '
@@ -174,3 +176,20 @@ class DataManage:
         (self.item_in_list(l['Status'], status, False))]
  
         return filt_list
+
+    def word_count(self):
+        data = self.open_base()
+
+        #List of words
+        words = Counter([d for dt in data for d in dt['Mood'] if d != ''])
+        
+        ls = words.items()
+
+        path = ct.folder + '/' + ct.word_csv
+        with open(path, 'w') as doc:
+            doc.write('Word' + ',' + 'Occurance' + '\n')
+            for ln in ls:
+                doc.write(ln[0] + ',' + str(ln[1]))
+                doc.write('\n')
+        
+        return 0

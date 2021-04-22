@@ -3,6 +3,8 @@ import datetime as dt
 folder = '/Users/ushhamilton/Documents/02 Journals/Journals/'
 temp = 'Template.md'
 data_b = 'JournalDatabase.json'
+word_csv = 'DayWords.csv'
+
 ext = '.md'
 journal_start = 10
 temp_folder = 'Temps/'
