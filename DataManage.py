@@ -51,13 +51,12 @@ class DataManage:
                     score = float('NaN')
 
         #Create dictionary
-        
         dic = {
             'Date': data_date.isoformat(),
             'File': file.replace(ct.folder, ''),
             'Title': tit.strip().capitalize(),
             'Status': [s.strip().capitalize() for s in stat.split(', ')],
-            'Tags': [t.strip().capitalize() for t in tag.split(', ')],
+            'Tags': [t.strip().capitalize() for t in tag.split('#') if t.strip() != ''],
             'Mood': [m.strip().capitalize() for m in mod.split(', ')],
             'Score': score
             }
@@ -80,6 +79,10 @@ class DataManage:
         return 0
 
     def open_base(self):
+        #checks if database exisits
+        if not(os.path.exists(ct.folder + ct.data_b)):
+            self.make_base()
+
         #Opens and reads json database
         with open(ct.folder + ct.data_b, 'r') as f:
             data = f.read()
