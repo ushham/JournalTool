@@ -161,8 +161,8 @@ class gui:
         tag_win.title('Tag Choices')
 
         #Scrollbar
-        sf = ScrolledFrame(tag_win, width=200, height=300)
-        sf.pack(side='right', expand=10, fill='x')
+        sf = ScrolledFrame(tag_win, width=200, height=500)
+        sf.pack(side='bottom', expand=100, fill='x')
 
         sf.bind_arrow_keys(tag_win)
         sf.bind_scroll_wheel(tag_win)

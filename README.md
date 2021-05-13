@@ -2,11 +2,21 @@
 A user interface to manage journal entries, which are written in markdown or other markup text files. The tool also manages an accompanying JSON database.
 
 It has been written for linux and macOS.
-control.py is the sheet requires the user to point the code at a specific folder, where the journal entries are then saved into subfolders by year -> month.
 
-The code opens a templete markdown file to then copy to the subfolder matching the date.
+## Setup
 
-Required (Written to ensure this would run natively on apple silicon):
+**control.py** is where the user points at a specific directory, where the journal entries are then automatically saved into subfolders by year -> month.
+
+The user defind template must be put in this directory and named *Template.md*.
+
+**gui.py** is the script to run to access the run, which then allows the user to control the tool.
+
+The code opens a user specified templete to then copy to the subfolder matching the date.
+
+## Requirements
+
+Required packages (Written to ensure this would run natively on apple silicon):
+
 * Python 3
 * Matplotlib
 * tkcalendar

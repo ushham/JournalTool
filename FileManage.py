@@ -45,21 +45,24 @@ class FileManage:
             if not os.path.exists(ct.folder + path):
                 self.makefolder(date)
 
-            shutil.copy(ct.folder + ct.temp, ct.folder + path)
-            os.rename(ct.folder + path + '/' + ct.temp, ct.folder + path + '/' + name)
+            if not os.path.exists(ct.folder + path + '/' + name):
+                shutil.copy(ct.folder + ct.temp, ct.folder + path)
+                os.rename(ct.folder + path + '/' + ct.temp, ct.folder + path + '/' + name)
 
-            #Rename title in file
-            text = self.readfile(path + '/' + name)
+                #Rename title in file
+                text = self.readfile(path + '/' + name)
+                
+                lines = text.readlines()
             
-            lines = text.readlines()
-           
-            if lines[0] == '# \n':
-                lines[0] = '# ' + title + '\n'
-                w_file = open(ct.folder + path + '/' + name, 'w')
-                w_file.write(''.join(lines))
-                w_file.close()
+                if lines[0] == '# \n':
+                    lines[0] = '# ' + title + '\n'
+                    w_file = open(ct.folder + path + '/' + name, 'w')
+                    w_file.write(''.join(lines))
+                    w_file.close()
 
-            self.openfile(path + '/' + name)
+                self.openfile(path + '/' + name)
+            else:
+                print('Journal: ' + name + ' already exists')
         return 0
 
     def open_loc(self, date=dt.datetime.today()):
