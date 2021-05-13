@@ -1,6 +1,6 @@
 import datetime as dt
 
-folder = '/Users/ushhamilton/Documents/02 Journals/Journals/'
+folder = ''
 temp = 'Template.md'
 data_b = 'JournalDatabase.json'
 word_csv = 'DayWords.csv'
