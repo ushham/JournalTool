@@ -242,6 +242,7 @@ class gui:
 
     def mk_stats(self):
         self.viser.stat_maker(self.drop_var.get())
+        self.viser.all_journals()
         return 0
 
 if __name__ == "__main__":

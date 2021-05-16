@@ -5,9 +5,13 @@ import datetime as dt
 import control as ct
 import DataManage as dm
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from matplotlib.collections import PolyCollection
 
 class Visualise:
     manage_data = dm.DataManage()
+    month_days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    month_labs = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
     def wk_rolling(self, data, start_date=ct.first_date, end_date=dt.date.today(), rolling=7):
         def idx_tuple(l, index, value):
@@ -141,6 +145,60 @@ class Visualise:
         #Make graph of total number of journals
         self.graph_use(data, status, month_list(start_date, end_date))
 
-        #cols = ['Tags', '# Totals', '# Year', '# Month', '# Week']
+        return 0
 
+    def all_journals(self):
+        #Produces a timeline of when journals were made for each year
+        #Open database
+        data = self.manage_data.open_base()
+        
+        #Find all dates in database
+        dates = [dt.datetime.strptime(d['Date'], '%Y-%m-%d') for d in data]
+        dates.sort()
+     
+        #Format data into (date, date + 1, year as str)
+        min_year, max_year, date_len = min(dates).year, max(dates).year, len(dates)
+
+        date_hold = []
+        delta = 0.4 #Width of bars
+        idx = 0
+
+        #Run through all dates
+        while idx < date_len:
+            prev_date = dates[idx]
+            year = prev_date.year
+            i = 1
+
+            #For each date, check how long each streak is (number of consecutive days of journalling)
+            while (dates[min(date_len-1, idx + i)] == prev_date + dt.timedelta(days=i)) & (year == dates[min(date_len-1, idx + i)].year) & (idx + i < date_len-1):
+                i += 1
+            
+            next_date = dates[idx + i - 1] if i > 1 else (prev_date + dt.timedelta(days=1))
+            p_d, n_d = prev_date.timetuple().tm_yday, next_date.timetuple().tm_yday
+            
+            #Make bar (Bottom Left, TL, TR, BR, BL) with the year (first year at the bottom)
+            v = [
+                (p_d, year - min_year - delta),
+                (p_d, year - min_year + delta),
+                (n_d, year - min_year + delta),
+                (n_d, year - min_year - delta),
+                (p_d, year - min_year - delta)
+            ]
+            date_hold.append(v)
+            idx += i
+
+        # Plot stuff
+        bars = PolyCollection(date_hold)
+        fig, ax = plt.subplots(num='Year by Year Comparison')
+      
+        ax.add_collection(bars)
+        ax.autoscale()
+
+        month_locs = [1 if i == 0 else sum(self.month_days[:i])+1 for i in range(len(self.month_days))]
+        ax.set_xticks(month_locs)
+        ax.set_xticklabels(self.month_labs)
+
+        ax.set_yticks([i for i in range(max_year - min_year + 1)])
+        ax.set_yticklabels([str(y) for y in range(min_year, max_year + 1)])
+        plt.show()
         return 0
