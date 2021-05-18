@@ -1,12 +1,13 @@
 import datetime as dt
 
-folder = ''
+folder = '/Users/ushhamilton/Documents/02 Journals/Journals/'
 temp = 'Template.md'
 data_b = 'JournalDatabase.json'
 word_csv = 'DayWords.csv'
+loc_csv = 'Locations.csv'
 
 ext = '.md'
-journal_start = 10
+journal_start = 12
 temp_folder = 'Temps/'
 
 

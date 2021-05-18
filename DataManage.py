@@ -11,6 +11,7 @@ class DataManage:
     tags = 'Tags:'
     mood = 'Mood:'
     feel = 'Score:'
+    location = 'Location:'
 
     def listall(self):
         #List all files in subfolders
@@ -52,6 +53,9 @@ class DataManage:
                 else:
                     score = float('NaN')
 
+            elif self.location in line:
+                locs = line.replace(self.location, '')
+
         #Create dictionary
         dic = {
             'Date': data_date.isoformat(),
@@ -60,7 +64,8 @@ class DataManage:
             'Status': [s.strip().capitalize() for s in stat.split(', ')],
             'Tags': [t.strip().capitalize() for t in tag.split('#') if t.strip() != ''],
             'Mood': [m.strip().capitalize() for m in mod.split(', ')],
-            'Score': score
+            'Score': score,
+            'Location': [ell.strip().capitalize() for ell in locs.split(', ')]
             }
         return dic
 
@@ -193,3 +198,55 @@ class DataManage:
                 doc.write('\n')
         
         return 0
+
+    def unique_locs(self, data = None):
+        def index(location, locs):
+            #function to return the index of a given location in the database
+            n = 0
+            check = False
+            while not(check):
+                check = True if locs[n][0] == location else False
+                idx = n if check == True else 0
+                n += 1
+            
+            return check, idx
+
+        if data == None:
+            data = self.open_base()
+
+        #list locations
+        locs = list(Counter([ell for els in data for ell in els['Location'] if ell != '']).items())
+        
+        #Open csv database
+        path = ct.folder + '/' + ct.loc_csv
+        with open(path, 'r') as doc:
+            loc_db = doc.readlines()
+
+        data_hold = [loc_db[0].replace('\n', '')]
+        #Update occurance of items
+        for ln in loc_db[1:]:
+            lns = ln.replace('\n', '').split(',')
+            location = lns[0]
+            check, idx = index(location, locs)
+            if check:
+                lns[1] = str(locs[idx][1])
+                new_line = ','.join(lns)
+    
+                data_hold.append(new_line)
+                locs.pop(idx)
+
+        #If new items are not in list, add to csv
+        for ell in locs:
+            new_line = ell[0] + ',' + str(ell[1]) + ',,,,'
+            data_hold.append(new_line)
+       
+        #Write the data to a new csv
+        with open(path, 'w') as doc:
+            for ln in data_hold:
+                doc.write(ln)
+                doc.write('\n')
+            doc.close()
+        return 0 
+
+x = DataManage()
+y = x.unique_locs()
