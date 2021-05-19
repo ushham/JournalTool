@@ -65,7 +65,7 @@ class DataManage:
             'Tags': [t.strip().capitalize() for t in tag.split('#') if t.strip() != ''],
             'Mood': [m.strip().capitalize() for m in mod.split(', ')],
             'Score': score,
-            'Location': [ell.strip().capitalize() for ell in locs.split(', ')]
+            'Location': {'Name': [ell.strip().capitalize() for ell in locs.split(', ')]}
             }
         return dic
 
@@ -93,6 +93,7 @@ class DataManage:
         #Opens and reads json database
         with open(ct.folder + ct.data_b, 'r') as f:
             data = f.read()
+            f.close()
         
         data = json.loads(data)
         return data
@@ -114,6 +115,8 @@ class DataManage:
 
         with open(ct.folder + ct.data_b, 'w') as f:
             json.dump(data, f)
+
+        self.unique_locs(data)
         return 0
 
     def list_data(self, data):
@@ -200,6 +203,7 @@ class DataManage:
         return 0
 
     def unique_locs(self, data = None):
+        print('running')
         def index(location, locs):
             #function to return the index of a given location in the database
             n = 0
@@ -215,7 +219,7 @@ class DataManage:
             data = self.open_base()
 
         #list locations
-        locs = list(Counter([ell for els in data for ell in els['Location'] if ell != '']).items())
+        locs = list(Counter([ell for els in data for ell in els['Location']['Name'] if ell != '']).items())
         
         #Open csv database
         path = ct.folder + '/' + ct.loc_csv
@@ -248,5 +252,30 @@ class DataManage:
             doc.close()
         return 0 
 
-x = DataManage()
-y = x.unique_locs()
+    def update_locs(self):
+        data = self.open_base()
+
+        #csv of location data
+        f = open(ct.folder + '/' + ct.loc_csv)
+        reader = csv.reader(f)
+        loc_info = list(reader)
+        loc_title = [i[0] for i in loc_info]
+
+        for d in data:
+            loc = d['Location']['Name']
+            if loc[0] != '':
+                idxs = [loc_title.index(name) for name in loc]
+
+                new_line = {
+                    'Name': loc,
+                    'Latitude': [loc_info[i][2] for i in idxs],
+                    'Longitude': [loc_info[i][3] for i in idxs],
+                    'City': [loc_info[i][4] for i in idxs],
+                    'Country': [loc_info[i][5] for i in idxs]
+                }
+                d['Location'] = new_line
+        
+        with open(ct.folder + ct.data_b, 'w') as fn:
+            json.dump(data, fn)
+            
+        return 0

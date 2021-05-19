@@ -65,7 +65,6 @@ class gui:
         cust_jrn.pack(padx=10, pady=10)
 
         #Make Database
-        self.datar.make_base()
         self.datar.word_count()
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
         frame.grid(row=2, column=3, padx=10, pady=10)
@@ -237,6 +236,7 @@ class gui:
     def mk_db(self):
         #Refresh database and refresh gui
         self.datar.updt_base()
+        self.datar.update_locs()
         self.window.destroy()
         self.__init__()
 
