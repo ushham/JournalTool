@@ -203,7 +203,6 @@ class DataManage:
         return 0
 
     def unique_locs(self, data = None):
-        print('running')
         def index(location, locs):
             #function to return the index of a given location in the database
             n = 0
