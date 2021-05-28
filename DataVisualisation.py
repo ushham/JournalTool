@@ -1,17 +1,22 @@
-import json
-import os
+import csv
 import math
 import datetime as dt
 import control as ct
 import DataManage as dm
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from matplotlib import cm
 from matplotlib.collections import PolyCollection
+
 
 class Visualise:
     manage_data = dm.DataManage()
     month_days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     month_labs = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    #mapping constants
+    dot_size = 100
+    color_variation = 100
 
     def wk_rolling(self, data, start_date=ct.first_date, end_date=dt.date.today(), rolling=7):
         def idx_tuple(l, index, value):
@@ -202,3 +207,47 @@ class Visualise:
         ax.set_yticklabels([str(y) for y in range(min_year, max_year + 1)])
         plt.show()
         return 0
+
+    def map_locations(self):
+        #Open Location database
+        with open(ct.folder + '/' + ct.loc_csv, newline='') as f:
+            reader = csv.reader(f)
+            data = list(reader)[1:]
+        
+        col_map = {
+            'Location': 0,
+            'Occurance': 1,
+            'Latest_visit': 2,
+            'Lat': 3,
+            'Lon': 4
+        }
+        loc = [d[col_map['Location']] for d in data]
+        occ = [int(d[col_map['Occurance']]) for d in data]
+        vis = [dt.datetime.strptime(d[col_map['Latest_visit']], '%Y-%m-%d') for d in data]
+        y = [float(d[col_map['Lat']]) for d in data]
+        x = [float(d[col_map['Lon']] )for d in data]
+
+        #Map extents
+        top_left, bottom_right = (min(x), max(y)), (max(x), min(y))
+
+        #Normalise Occurance (0-1)
+        max_occ = max(occ)
+        occ_norm = [round(i / max_occ * self.dot_size, 2) for i in occ]
+
+        #Days since visit
+        today = dt.datetime.today()
+        days_since_visit = [today - d for d in vis]
+
+        #Normalise days (0-1)
+        max_days = max(days_since_visit)
+        days_visit_norm = [round(i / max_days, 2) for i in days_since_visit]
+
+        #Plot the map
+        #Colours:
+        dividor = [i / self.color_variation for i in range(self.color_variation + 1)]
+        c_map = cm.get_cmap('Blues_r')
+        c_scale = [c_map(i) for i in dividor]
+        my_colors = [c_scale[int(i*self.color_variation)] for i in days_visit_norm]
+
+        plt.scatter(x, y, s=occ_norm, color=my_colors)
+        plt.show()
