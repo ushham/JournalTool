@@ -5,7 +5,7 @@ import DataVisualisation as dv
 import tkinter as tk
 import datetime as dt
 from tkinter import ttk
-from tkcalendar import Calendar, DateEntry
+from tkcalendar import Calendar
 from tkscrolledframe import ScrolledFrame
 
 class gui:
