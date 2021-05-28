@@ -1,5 +1,7 @@
 import csv
 import math
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 import datetime as dt
 import control as ct
 import DataManage as dm
@@ -15,8 +17,11 @@ class Visualise:
     month_labs = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
     #mapping constants
-    dot_size = 100
+    dot_size = 500
     color_variation = 100
+    min_size = 0.3
+    min_shade = 0.4
+    boundary = 0.5
 
     def wk_rolling(self, data, start_date=ct.first_date, end_date=dt.date.today(), rolling=7):
         def idx_tuple(l, index, value):
@@ -227,12 +232,9 @@ class Visualise:
         y = [float(d[col_map['Lat']]) for d in data]
         x = [float(d[col_map['Lon']] )for d in data]
 
-        #Map extents
-        top_left, bottom_right = (min(x), max(y)), (max(x), min(y))
-
         #Normalise Occurance (0-1)
         max_occ = max(occ)
-        occ_norm = [round(i / max_occ * self.dot_size, 2) for i in occ]
+        occ_norm = [max(round(i / max_occ * self.dot_size, 2), self.min_size) for i in occ]
 
         #Days since visit
         today = dt.datetime.today()
@@ -240,7 +242,7 @@ class Visualise:
 
         #Normalise days (0-1)
         max_days = max(days_since_visit)
-        days_visit_norm = [round(i / max_days, 2) for i in days_since_visit]
+        days_visit_norm = [min(round(i / max_days, 2), self.min_shade) for i in days_since_visit]
 
         #Plot the map
         #Colours:
@@ -249,5 +251,12 @@ class Visualise:
         c_scale = [c_map(i) for i in dividor]
         my_colors = [c_scale[int(i*self.color_variation)] for i in days_visit_norm]
 
-        plt.scatter(x, y, s=occ_norm, color=my_colors)
+        proj = ccrs.Mollweide()
+        plt.figure(num='My Locations')
+        ax = plt.axes(projection=proj)
+        
+        ax.coastlines()
+        ax.add_feature(cfeature.BORDERS)
+        ax.set_extent([min(x)-self.boundary, max(x)+self.boundary, min(y)-self.boundary, max(y)+self.boundary], crs=ccrs.PlateCarree())
+        plt.scatter(x=x, y=y, s=occ_norm, color=my_colors, transform=ccrs.PlateCarree())
         plt.show()
