@@ -15,10 +15,7 @@ The code opens a user specified templete to then copy to the subfolder matching 
 
 ## Requirements
 
-Required packages (Written to ensure this would run natively on apple silicon):
+Python 3.9.5 with tkinter installed.
 
-* Python 3
-* Matplotlib
-* tkcalendar
-* tkscrolledframe
+The required packages were chosen to ensure this would run on apple silicon.
 
