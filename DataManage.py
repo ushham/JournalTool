@@ -217,30 +217,43 @@ class DataManage:
         if data == None:
             data = self.open_base()
 
-        #list locations
-        locs = list(Counter([ell for els in data for ell in els['Location']['Name'] if ell != '']).items())
+        #list locations with occurance
+        locs = [ell for els in data for ell in els['Location']['Name'] if ell != '']
+        visit_date = [[ell, els['Date']] for els in data for ell in els['Location']['Name'] if ell != '']
         
+        locs = list(Counter(locs).items())
+    
+        #Find the latest stay at each location
+        latest_visit = []
+        for i in locs:
+            location = i[0]
+            late_date = max([dl[1] for dl in visit_date if dl[0] == location])
+            latest_visit.append((location, late_date))
+
         #Open csv database
         path = ct.folder + '/' + ct.loc_csv
         with open(path, 'r') as doc:
             loc_db = doc.readlines()
 
         data_hold = [loc_db[0].replace('\n', '')]
-        #Update occurance of items
+
+        #Update occurance of items and latest visit
         for ln in loc_db[1:]:
             lns = ln.replace('\n', '').split(',')
             location = lns[0]
-            check, idx = index(location, locs)
-            if check:
-                lns[1] = str(locs[idx][1])
+            check_1, idx_1 = index(location, locs)
+            check_2, idx_2 = index(location, latest_visit)
+            if check_1 and check_2:
+                lns[1] = str(locs[idx_1][1])
+                lns[2] = str(latest_visit[idx_2][1])
                 new_line = ','.join(lns)
     
                 data_hold.append(new_line)
-                locs.pop(idx)
+                locs.pop(idx_1)
 
         #If new items are not in list, add to csv
         for ell in locs:
-            new_line = ell[0] + ',' + str(ell[1]) + ',,,,'
+            new_line = ell[0] + ',' + str(ell[1]) + ',,,,,'
             data_hold.append(new_line)
        
         #Write the data to a new csv
