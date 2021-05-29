@@ -19,9 +19,13 @@ class Visualise:
     #mapping constants
     dot_size = 500
     color_variation = 100
-    min_size = 0.3
-    min_shade = 0.4
-    boundary = 0.5
+    min_size = 0.4
+    min_shade = 0.3
+    bound_offset = 0.5
+
+    #Set limit if you want to focus on a specific area (set to show NW Europe)
+    #Leave blank if you want the area to be set automatically
+    map_lims = []#[-10, 4, 49, 55]
 
     def wk_rolling(self, data, start_date=ct.first_date, end_date=dt.date.today(), rolling=7):
         def idx_tuple(l, index, value):
@@ -257,6 +261,7 @@ class Visualise:
         
         ax.coastlines()
         ax.add_feature(cfeature.BORDERS)
-        ax.set_extent([min(x)-self.boundary, max(x)+self.boundary, min(y)-self.boundary, max(y)+self.boundary], crs=ccrs.PlateCarree())
+        boundary = self.map_lims if self.map_lims !=[] else [min(x)-self.bound_offset, max(x)+self.bound_offset, min(y)-self.bound_offset, max(y)+self.bound_offset]
+        ax.set_extent(boundary, crs=ccrs.PlateCarree())
         plt.scatter(x=x, y=y, s=occ_norm, color=my_colors, transform=ccrs.PlateCarree())
         plt.show()
