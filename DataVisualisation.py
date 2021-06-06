@@ -232,7 +232,7 @@ class Visualise:
         }
         occ = [int(d[col_map['Occurance']]) for d in data]
         
-        vis = [dt.datetime.strptime(d[col_map['Latest_visit']], '%d/%m/%Y') for d in data]
+        vis = [dt.datetime.strptime(d[col_map['Latest_visit']], '%Y-%m-%d') for d in data]
         y = [float(d[col_map['Lat']]) for d in data]
         x = [float(d[col_map['Lon']] )for d in data]
 
