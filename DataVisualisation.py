@@ -25,7 +25,7 @@ class Visualise:
 
     #Set limit if you want to focus on a specific area (set to show NW Europe)
     #Leave blank if you want the area to be set automatically
-    map_lims = []#[-10, 4, 49, 55]
+    map_lims = [-10, 4, 49, 55]
 
     def wk_rolling(self, data, start_date=ct.first_date, end_date=dt.date.today(), rolling=7):
         def idx_tuple(l, index, value):
@@ -230,9 +230,9 @@ class Visualise:
             'Lat': 3,
             'Lon': 4
         }
-        loc = [d[col_map['Location']] for d in data]
         occ = [int(d[col_map['Occurance']]) for d in data]
-        vis = [dt.datetime.strptime(d[col_map['Latest_visit']], '%Y-%m-%d') for d in data]
+        
+        vis = [dt.datetime.strptime(d[col_map['Latest_visit']], '%d/%m/%Y') for d in data]
         y = [float(d[col_map['Lat']]) for d in data]
         x = [float(d[col_map['Lon']] )for d in data]
 
@@ -251,7 +251,7 @@ class Visualise:
         #Plot the map
         #Colours:
         dividor = [i / self.color_variation for i in range(self.color_variation + 1)]
-        c_map = cm.get_cmap('Blues_r')
+        c_map = cm.get_cmap('Purples_r')
         c_scale = [c_map(i) for i in dividor]
         my_colors = [c_scale[int(i*self.color_variation)] for i in days_visit_norm]
 
