@@ -204,6 +204,9 @@ class Visualise:
         # Plot stuff
         bars = PolyCollection(date_hold)
         fig, ax = plt.subplots(num='Year by Year Comparison')
+
+        #make vertical line of todays date
+        ax.vlines(dt.date.today().timetuple().tm_yday, -0.4, max_year - min_year + 0.4, colors='grey')
       
         ax.add_collection(bars)
         ax.autoscale()
