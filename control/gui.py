@@ -1,7 +1,7 @@
-import FileManage as fm
-import DataManage as dm
-import FileMaker as fmk
-import DataVisualisation as dv
+import File_management.FileManage as fm
+import Data_management.DataManage as dm
+import File_management.FileMaker as fmk
+import Data_management.DataVisualisation as dv
 import tkinter as tk
 import datetime as dt
 from tkinter import ttk
@@ -87,6 +87,12 @@ class gui:
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
         frame.grid(row=3, column=3, padx=10, pady=10)
         cust_jrn = ttk.Button(master=frame, text="  Graph  ", command=self.viser.show_score)
+        cust_jrn.pack(padx=10, pady=10) 
+
+        #My life in weeks
+        frame = tk.Frame(master=self.window, relief=tk.RAISED)
+        frame.grid(row=4, column=2, padx=10, pady=10)
+        cust_jrn = ttk.Button(master=frame, text="  MLIW  ", command=life_in_weeks.mliw)
         cust_jrn.pack(padx=10, pady=10) 
 
         self.window.mainloop()

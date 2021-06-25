@@ -1,9 +1,9 @@
 import datetime as dt
 import json
 import os
-import FileManage as fm
-import DataManage as dm
-import control as ct
+import File_management.FileManage as fm
+import Data_management.DataManage as dm
+import control.control as ct
 
 class FileMake:
     filer = fm.FileManage()
