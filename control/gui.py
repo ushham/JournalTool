@@ -2,6 +2,7 @@ import File_management.FileManage as fm
 import Data_management.DataManage as dm
 import File_management.FileMaker as fmk
 import Data_management.DataVisualisation as dv
+import Life_in_weeks.life_in_weeks as liw
 import tkinter as tk
 import datetime as dt
 from tkinter import ttk
@@ -92,7 +93,7 @@ class gui:
         #My life in weeks
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
         frame.grid(row=4, column=2, padx=10, pady=10)
-        cust_jrn = ttk.Button(master=frame, text="  MLIW  ", command=self.viser.show_score)
+        cust_jrn = ttk.Button(master=frame, text="  MLIW  ", command=self.mliw_vis)
         cust_jrn.pack(padx=10, pady=10) 
 
         self.window.mainloop()
@@ -250,4 +251,8 @@ class gui:
         self.viser.stat_maker(self.drop_var.get())
         self.viser.all_journals()
         self.viser.map_locations()
+        return 0
+
+    def mliw_vis(self):
+        liw.mliw()
         return 0
