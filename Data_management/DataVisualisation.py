@@ -3,8 +3,8 @@ import math
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import datetime as dt
-import control as ct
-import DataManage as dm
+import control.control as ct
+import Data_management.DataManage as dm
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib import cm
