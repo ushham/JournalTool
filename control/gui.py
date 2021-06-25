@@ -92,7 +92,7 @@ class gui:
         #My life in weeks
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
         frame.grid(row=4, column=2, padx=10, pady=10)
-        cust_jrn = ttk.Button(master=frame, text="  MLIW  ", command=life_in_weeks.mliw)
+        cust_jrn = ttk.Button(master=frame, text="  MLIW  ", command=self.viser.show_score)
         cust_jrn.pack(padx=10, pady=10) 
 
         self.window.mainloop()
@@ -251,6 +251,3 @@ class gui:
         self.viser.all_journals()
         self.viser.map_locations()
         return 0
-
-if __name__ == "__main__":
-    gui()
