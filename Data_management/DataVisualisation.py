@@ -23,9 +23,11 @@ class Visualise:
     min_shade = 0.3
     bound_offset = 0.5
 
-    #Set limit if you want to focus on a specific area (set to show NW Europe)
+    #Set limit if you want to focus on a specific area
     #Leave blank if you want the area to be set automatically
-    map_lims = [-10, 4, 49, 55]
+    map_lims = [-10, 4, 49, 55] #<- British Isles
+    #map_lims = [-10, 5, 43, 55] #<- NW Europe
+    
 
     def wk_rolling(self, data, start_date=ct.first_date, end_date=dt.date.today(), rolling=7):
         def idx_tuple(l, index, value):

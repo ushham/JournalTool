@@ -75,3 +75,17 @@ class FileMake:
         self.combinefile('My ' + name, dates, rev=True)
         return 0
 
+    def make_time_capsule(self, date, title, path=ct.time_cap_folder):
+        #Time capsule is named as 'yymmdd-future yymmdd title'
+        year, month, day = date.strftime('%Y'), date.strftime('%m'), date.strftime('%d')
+        today = dt.date.today()
+        y, m, d = today.strftime('%Y'), today.strftime('%m'), today.strftime('%d')
+
+        title = year[2:] + month + day + ' ' + y[2:] + m + d + ' - '+ title
+
+        path = path + '/' + title + ct.ext
+
+        self.filer.copytemplate(title, date, path)
+        return 0
+
+
