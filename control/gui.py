@@ -38,7 +38,7 @@ class gui:
         #Custom date pick option
         frame = tk.Frame(master=self.window, relief=tk.RAISED)
         frame.grid(row=1, column=1, padx=10, pady=10)
-        cust_jrn = ttk.Button(master=frame, text=" Journal ", command=self.cal_pop)
+        cust_jrn = ttk.Button(master=frame, text=" Journal ", command=self.cal_journal_pop)
         cust_jrn.pack(padx=10, pady=10)
 
         #Open todays folder
@@ -96,14 +96,24 @@ class gui:
         cust_jrn = ttk.Button(master=frame, text="  MLIW  ", command=self.mliw_vis)
         cust_jrn.pack(padx=10, pady=10) 
 
+        #Time capsule dash
+        frame = tk.Frame(master=self.window, relief=tk.RAISED)
+        frame.grid(row=4, column=3, padx=10, pady=10)
+        cust_jrn = ttk.Button(master=frame, text="Time Capsule", command=self.cal_time_pop)
+        cust_jrn.pack(padx=10, pady=10) 
+
         self.window.mainloop()
     
-    def run(self, date=dt.datetime.today()):
+    def run(self, date=dt.datetime.today(), journal=True):
         #make popout with textbox to get title of journal
         def closeme(event=None):
             name = entry.get()
             newwin.destroy()
-            self.filer.copytemplate(name, date)
+            if journal:
+                self.filer.copytemplate(name, date, path='')
+            else:
+                self.faker.make_time_capsule(date=date, title=name)
+                self.datar.time_capsule_list()
 
         newwin = tk.Tk()
         newwin.title('Journal Name')
@@ -117,11 +127,29 @@ class gui:
         but.pack()
         return 0    
 
-    def cal_pop(self):
+    def cal_journal_pop(self, journal=True):
         #pop up calculator to choose date
         def save_date():
             top.destroy()
-            self.run(cal.selection_get())
+            self.run(cal.selection_get(), journal)
+
+        top = tk.Toplevel(self.window)
+        cal = Calendar(top, font="Arial 14", selectmode='day', locale='en_US',
+                    cursor="hand2")
+        cal.date.today()
+
+        cal.pack(fill="both", expand=True)
+
+        sub = tk.Button(top, text="ok", command=save_date)
+        sub.pack()
+
+        return 0
+
+    def cal_time_pop(self, journal=False):
+        #pop up calculator to choose date
+        def save_date():
+            top.destroy()
+            self.run(cal.selection_get(), journal)
 
         top = tk.Toplevel(self.window)
         cal = Calendar(top, font="Arial 14", selectmode='day', locale='en_US',
@@ -256,3 +284,4 @@ class gui:
     def mliw_vis(self):
         liw.mliw()
         return 0
+

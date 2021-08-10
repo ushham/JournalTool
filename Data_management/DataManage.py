@@ -291,3 +291,42 @@ class DataManage:
             json.dump(data, fn)
             
         return 0
+
+    def time_capsule_list(self):
+        def time_to_open(date):
+            today = dt.datetime.today()
+            date_formatted = dt.datetime.strptime(date, '%y%m%d')
+
+            return str(today >= date_formatted)
+
+        def timedelta(d1, d2):
+            date1 = dt.datetime.strptime(d1, '%y%m%d')
+            date2 = dt.datetime.strptime(d2, '%y%m%d')
+
+            return str((date1 - date2).days)
+
+        def extract_data_from_name(name):
+            path = ct.time_cap_folder + '/' + name
+
+            data = name.split(' - ')
+            datedue, datebegin = data[0].split(' ')
+            name = data[1].replace(ct.ext, '')
+            
+            return [datedue, datebegin, timedelta(datedue, datebegin), name, time_to_open(datedue), path]
+
+        files = os.listdir(ct.time_cap_folder)
+        files.sort()
+        
+        holder = [['Open Date', 'Date Written', 'Wait Period (Days)', 'Title', 'Time to Open','Path']]
+        for f in files:
+            if os.path.splitext(f)[1] == ct.ext:
+                holder.append(extract_data_from_name(f))
+
+        path = ct.time_cap_folder + '/' + ct.time_cap_db
+        with open(path, 'w') as doc:
+            for ln in holder:
+                ln_str = ','.join(ln)
+                doc.write(ln_str)
+                doc.write('\n')
+        return 0
+

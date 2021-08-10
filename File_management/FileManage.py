@@ -7,13 +7,21 @@ import control.control as ct
 
 class FileManage:
 
-    def openfile(self, path):
-        file_name = ct.folder + path
+    def openfile(self, path, parent_folder=True):
+        if parent_folder:
+            file_name = ct.folder + path
+        else:
+            file_name = path
+        
         subprocess.run(['open', file_name], check=True)
         return 0
 
-    def readfile(self, path):
-        file_name = ct.folder + path
+    def readfile(self, path, parent_folder=True):
+        if parent_folder:
+            file_name = ct.folder + path
+        else:
+            file_name = path
+        
         data = open(file_name)
         return data
 
@@ -34,35 +42,38 @@ class FileManage:
         
         return 0
 
-    def copytemplate(self, title, date=dt.date.today()):
+    def copytemplate(self, title, date=dt.date.today(), path=''):
         #Given date, copys template to location and saves with name and opens
         year, month, day, m_name = date.strftime('%Y'), date.strftime('%m'), date.strftime('%d'), date.strftime('%b')
         name = year[2:] + month + day
-        if title != '':
-            name = name + ' ' + title + ct.ext
-            
-            path = year + '/' + month + ' ' + m_name 
-            if not os.path.exists(ct.folder + path):
+        
+        name = name + ' ' + title + ct.ext
+        journal_path = year + '/' + month + ' ' + m_name
+
+        if path == '':
+            path = ct.folder + journal_path
+            if not os.path.exists(path):
                 self.makefolder(date)
 
-            if not os.path.exists(ct.folder + path + '/' + name):
-                shutil.copy(ct.folder + ct.temp, ct.folder + path)
-                os.rename(ct.folder + path + '/' + ct.temp, ct.folder + path + '/' + name)
+            path = path + '/' + name
 
-                #Rename title in file
-                text = self.readfile(path + '/' + name)
-                
-                lines = text.readlines()
+        if not os.path.exists(path):
+            shutil.copy(ct.folder + ct.temp, path)
+
+            #Rename title in file
+            text = self.readfile(path, False)
             
-                if lines[0] == '# \n':
-                    lines[0] = '# ' + title + '\n'
-                    w_file = open(ct.folder + path + '/' + name, 'w')
-                    w_file.write(''.join(lines))
-                    w_file.close()
+            lines = text.readlines()
+        
+            if lines[0] == '# \n':
+                lines[0] = '# ' + title + '\n'
+                w_file = open(path, 'w')
+                w_file.write(''.join(lines))
+                w_file.close()
 
-                self.openfile(path + '/' + name)
-            else:
-                print('Journal: ' + name + ' already exists')
+            self.openfile(path, False)
+        else:
+            print('Journal: ' + name + ' already exists')
         return 0
 
     def open_loc(self, date=dt.datetime.today()):
