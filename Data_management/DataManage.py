@@ -297,7 +297,7 @@ class DataManage:
             today = dt.datetime.today()
             date_formatted = dt.datetime.strptime(date, '%y%m%d')
 
-            return str(today >= date_formatted)
+            return today >= date_formatted
 
         def timedelta(d1, d2):
             date1 = dt.datetime.strptime(d1, '%y%m%d')
@@ -311,8 +311,11 @@ class DataManage:
             data = name.split(' - ')
             datedue, datebegin = data[0].split(' ')
             name = data[1].replace(ct.ext, '')
-            
-            return [datedue, datebegin, timedelta(datedue, datebegin), name, time_to_open(datedue), path]
+
+            open_time = time_to_open(datedue)
+            path_to_write = path if open_time else ''
+
+            return [datedue, datebegin, timedelta(datedue, datebegin), name, str(open_time), path_to_write]
 
         files = os.listdir(ct.time_cap_folder)
         files.sort()
@@ -322,7 +325,7 @@ class DataManage:
             if os.path.splitext(f)[1] == ct.ext:
                 holder.append(extract_data_from_name(f))
 
-        path = ct.time_cap_folder + '/' + ct.time_cap_db
+        path = ct.folder + '/' + ct.time_cap_db
         with open(path, 'w') as doc:
             for ln in holder:
                 ln_str = ','.join(ln)
