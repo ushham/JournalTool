@@ -313,14 +313,18 @@ class DataManage:
             name = data[1].replace(ct.ext, '')
 
             open_time = time_to_open(datedue)
-            path_to_write = path if open_time else ''
+            if open_time:
+                path_to_write = '[-->](' + path + ')'
+            else:
+                path_to_write = ''
 
             return [datedue, datebegin, timedelta(datedue, datebegin), name, str(open_time), path_to_write]
 
         files = os.listdir(ct.time_cap_folder)
         files.sort()
         
-        holder = [['Open Date', 'Date Written', 'Wait Period (Days)', 'Title', 'Time to Open','Path']]
+        holder = [['Open Date', 'Date Written', 'Wait Period (Days)', 'Title', 'Time to Open','Path'], 
+                    ['---', '---', '---', '---', '---','---']]
         for f in files:
             if os.path.splitext(f)[1] == ct.ext:
                 holder.append(extract_data_from_name(f))
@@ -328,7 +332,8 @@ class DataManage:
         path = ct.folder + '/' + ct.time_cap_db
         with open(path, 'w') as doc:
             for ln in holder:
-                ln_str = ','.join(ln)
+                ln_str = '|' + '|'.join(ln) + '|'
+
                 doc.write(ln_str)
                 doc.write('\n')
         return 0
