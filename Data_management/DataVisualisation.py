@@ -25,8 +25,9 @@ class Visualise:
 
     #Set limit if you want to focus on a specific area
     #Leave blank if you want the area to be set automatically
-    map_lims = [-10, 4, 49, 55] #<- British Isles
-    #map_lims = [-10, 5, 43, 55] #<- NW Europe
+    # map_lims = [-10, 4, 49, 55] #<- British Isles
+    # map_lims = [-10, 5, 43, 55] #<- NW Europe
+    map_lims = [-10, 12, 40, 55] #<- W Europe
     
 
     def wk_rolling(self, data, start_date=ct.first_date, end_date=dt.date.today(), rolling=7):
