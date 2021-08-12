@@ -75,7 +75,7 @@ class DataManage:
         files = self.listall()
         hold = []
         for f in files:
-            if ct.temp not in f and ct.temp_folder not in f:
+            if (ct.temp not in f) and (ct.temp_folder not in f) and (ct.time_cap_db not in f):
                 data = open(f)
                 line = self.parse_data(f, data)
                 hold.append(line)
@@ -108,7 +108,7 @@ class DataManage:
         #Removes files already in database
         completed = [f for f in files if f.replace(ct.folder, '') not in prev]
         for f in completed:
-            if (ct.temp not in f) and (ct.temp_folder not in f):
+            if (ct.temp not in f) and (ct.temp_folder not in f) and (ct.time_cap_db not in f):
                 newd = open(f)
                 line = self.parse_data(f, newd)
                 data.append(line)
