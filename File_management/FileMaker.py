@@ -14,6 +14,7 @@ class FileMake:
 
     def breaker(self, title, text):
         #Given text and a title, makes a dropdown for a markdown file
+        text = text.replace('\n', '<br>')
         output = (
             '<details>\n' +
             '<summary>' + title + '</summary>\n' +
