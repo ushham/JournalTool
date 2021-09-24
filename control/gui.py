@@ -165,22 +165,23 @@ class gui:
 
     def tags_pop(self):
         #Create popout to list all tags to choose from
+        #Find current Status choice
+        stat_choose = self.drop_var.get()
+
         def save_tags():
             res = [(t, var.get()) for t, var in output.items()]
             res = [r[0] for r in res if r[1] == 1]
             tag_win.destroy()
 
-            data = self.datar.data_from_tags(res)
+            stat = [] if (stat_choose == 'All' or stat_choose == []) else stat_choose
+            data = self.datar.data_from_tags(res, stat)
             name = ', '.join(res)
-            self.faker.combinefile('My Tags: ' + name, data)
+            self.faker.combinefile('My Tags: ' + name + ' [' +stat_choose+']', data)
 
         def sort_tuple(tup):  
             # sorts the first element of tuples alphebetically 
             tup.sort(key = lambda x: x[0])  
             return tup  
-        
-        #Find current Status choice
-        stat_choose = self.drop_var.get()
         
         #Filter Tag list to only include correct status
         if stat_choose == 'All':
