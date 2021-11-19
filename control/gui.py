@@ -113,7 +113,7 @@ class gui:
                 self.filer.copytemplate(name, date, path='')
             else:
                 self.faker.make_time_capsule(date=date, title=name)
-                self.datar.time_capsule_list()
+                
 
         newwin = tk.Tk()
         newwin.title('Journal Name')
@@ -273,6 +273,7 @@ class gui:
         #Refresh database and refresh gui
         self.datar.updt_base()
         self.datar.update_locs()
+        self.datar.time_capsule_list()
         self.window.destroy()
         self.__init__()
 
