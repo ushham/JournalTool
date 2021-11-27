@@ -1,4 +1,3 @@
-import json
 import os
 import datetime as dt
 import subprocess
@@ -8,12 +7,32 @@ import control.control as ct
 class FileManage:
 
     def openfile(self, path, parent_folder=True):
+        '''Opens a file given the path.
+
+        If argument parent_folder isnt passed, it assumes the path is in the journal folder.
+        This function requires manual setting up to work with your own application preferences.
+
+        Parameters
+        ----------
+        path : str, optional
+            file path
+
+        parent_folder : str,
+            If false it assumes the path variable is the absolute path and not the journal folder path
+        '''
         if parent_folder:
-            file_name = ct.folder + path
+            #Uses obsidian here as it is within the journal vault that I have set up, using the URL feature.
+            vault = "d05aec44c767121c"
+            bash_string = "open 'obsidian://open?vault=" + vault + "&file=" + path + "'"
+
         else:
+            #If not in journal obsidian vault I want the file to open in the Typewriter app
             file_name = path
-        
-        subprocess.run(['open', file_name], check=True)
+            application = "Typewriter"
+            bash_string = "open -a " + application + " " + "'" + file_name + "'"
+
+        os.system(bash_string)
+    
         return 0
 
     def readfile(self, path, parent_folder=True):
