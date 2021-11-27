@@ -90,7 +90,7 @@ class FileManage:
                 w_file.write(''.join(lines))
                 w_file.close()
 
-            self.openfile(path, False)
+            self.openfile(journal_path + '/' + name)
         else:
             print('Journal: ' + name + ' already exists')
         return 0
