@@ -19,7 +19,7 @@ class FileMake:
             '<details>\n' +
             '<summary>' + title + '</summary>\n' +
             '<br>\n' +
-            text.strip() + '\n' +
+            text.strip() + '\n' + '\n' + '<br>\n'
             '</details>\n'
         )
         return output
