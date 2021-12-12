@@ -55,6 +55,11 @@ class DataManage:
 
             elif self.location in line:
                 locs = line.replace(self.location, '')
+        
+        #Format the location data
+        #This removes the Obsidian backlinking formtting before the text strings are correctly formatted.
+        locations = [ell.replace('[[', '').replace(']]', '') for ell in locs.split(', ')]
+        locations = [loc.strip().capitalize() for loc in locations]
 
         #Create dictionary
         dic = {
@@ -65,7 +70,7 @@ class DataManage:
             'Tags': [t.strip().capitalize() for t in tag.split('#') if t.strip() != ''],
             'Mood': [m.strip().capitalize() for m in mod.split(', ')],
             'Score': score,
-            'Location': {'Name': [ell.strip().capitalize() for ell in locs.split(', ')]}
+            'Location': {'Name': locations}
             }
         return dic
 
@@ -222,7 +227,6 @@ class DataManage:
         visit_date = [[ell, els['Date']] for els in data for ell in els['Location']['Name'] if ell != '']
         
         locs = list(Counter(locs).items())
-    
         #Find the latest stay at each location
         latest_visit = []
         for i in locs:
@@ -272,7 +276,6 @@ class DataManage:
         reader = csv.reader(f)
         loc_info = list(reader)
         loc_title = [i[0] for i in loc_info]
-
         for d in data:
             loc = d['Location']['Name']
             if loc[0] != '':
@@ -280,10 +283,10 @@ class DataManage:
 
                 new_line = {
                     'Name': loc,
-                    'Latitude': [loc_info[i][2] for i in idxs],
-                    'Longitude': [loc_info[i][3] for i in idxs],
-                    'City': [loc_info[i][4] for i in idxs],
-                    'Country': [loc_info[i][5] for i in idxs]
+                    'Latitude': [loc_info[i][3] for i in idxs],
+                    'Longitude': [loc_info[i][4] for i in idxs],
+                    'City': [loc_info[i][5] for i in idxs],
+                    'Country': [loc_info[i][6] for i in idxs]
                 }
                 d['Location'] = new_line
         
@@ -338,3 +341,7 @@ class DataManage:
                 doc.write('\n')
         return 0
 
+
+if __name__ == "__main__":
+    data = DataManage()
+    database = data.update_locs()
