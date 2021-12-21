@@ -22,7 +22,8 @@ class FileManage:
         '''
         if parent_folder:
             #Uses obsidian here as it is within the journal vault that I have set up, using the URL feature.
-            vault = "d05aec44c767121c"
+            # To find vault go to: ~/Users/user/Library/Application Support/obsidian/obsidian.json
+            vault = "0a4e5e27e9772700"
             bash_string = "open 'obsidian://open?vault=" + vault + "&file=" + path + "'"
 
         else:

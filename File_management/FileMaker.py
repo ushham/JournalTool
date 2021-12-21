@@ -55,7 +55,7 @@ class FileMake:
         (conv_date(d['Date']).month == my_month) and 
         (conv_date(d['Date']).day == my_day) and
         ((stat in d['Status']) or stat == 'All')]
-
+       
         self.combinefile('My Year', dates, rev=True)
         return 0
 
