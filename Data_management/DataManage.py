@@ -344,4 +344,4 @@ class DataManage:
 
 if __name__ == "__main__":
     data = DataManage()
-    database = data.update_locs()
+    database = data.make_base()
