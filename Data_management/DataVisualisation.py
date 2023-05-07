@@ -264,10 +264,14 @@ class Visualise:
         proj = ccrs.Mollweide()
         plt.figure(num='My Locations')
         ax = plt.axes(projection=proj)
-        
+
         ax.coastlines()
         ax.add_feature(cfeature.BORDERS)
         boundary = self.map_lims if self.map_lims !=[] else [min(x)-self.bound_offset, max(x)+self.bound_offset, min(y)-self.bound_offset, max(y)+self.bound_offset]
         ax.set_extent(boundary, crs=ccrs.PlateCarree())
         plt.scatter(x=x, y=y, s=occ_norm, color=my_colors, transform=ccrs.PlateCarree())
         plt.show()
+
+if __name__ == "__main__":
+    visualiseation = Visualise()
+    visualiseation.map_locations()
