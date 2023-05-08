@@ -13,6 +13,11 @@ class DataManage:
     feel = 'Score:'
     location = 'Location:'
 
+    lat = "Latitude:"
+    lon = "Longitude:"
+    city = "City:"
+    country = "Country"
+
     def listall(self):
         #List all files in subfolders
         locs = os.walk(ct.folder)
@@ -74,6 +79,23 @@ class DataManage:
             }
         return dic
 
+    def parsed_location_file(self, file):
+        file_path = ct.location_folder + file
+        file_contents = open(file_path)
+        lines = file_contents.readlines()
+
+        for ln in lines:
+            if self.lat in ln:
+                temp_lat = ln.replace(self.lat, "")
+            elif self.lon in ln:
+                temp_lon = ln.replace(self.lon, "")
+            elif self.city in ln:
+                temp_city = ln.replace(self.city, "")
+            elif self.country in ln:
+                temp_country = ln.replace(self.country, "")
+
+        return temp_lat, temp_lon, temp_city, temp_country
+
     def make_base(self):
         #open all files and read
         #title, date, status, tags
@@ -108,7 +130,9 @@ class DataManage:
         #Used to update day to day rarther than full update
         data = self.open_base()
         files = self.listall()
-        prev = [f['File'] for f in data]
+
+        #Previously checked files, excluding those without location information
+        prev = [f['File'] for f in data if len(f["Location"]) > 0]
 
         #Removes files already in database
         completed = [f for f in files if f.replace(ct.folder, '') not in prev]
@@ -227,6 +251,7 @@ class DataManage:
         visit_date = [[ell, els['Date']] for els in data for ell in els['Location']['Name'] if ell != '']
         
         locs = list(Counter(locs).items())
+
         #Find the latest stay at each location
         latest_visit = []
         for i in locs:
@@ -256,7 +281,10 @@ class DataManage:
                 locs.pop(idx_1)
 
         #If new items are not in list, add to csv
+        # //TODO: Get information from obsidian file
         for ell in locs:
+            # Parse Location file
+
             new_line = ell[0] + ',' + str(ell[1]) + ',,,,,'
             data_hold.append(new_line)
        
@@ -344,4 +372,5 @@ class DataManage:
 
 if __name__ == "__main__":
     data = DataManage()
-    database = data.make_base()
+    # database = data.make_base()
+    print(data.parsed_location_file("Albany.md"))
