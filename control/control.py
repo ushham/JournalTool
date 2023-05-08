@@ -2,10 +2,12 @@ import datetime as dt
 
 folder = '/Users/ushhamilton/Documents/02_Journals/Journals/'
 location_folder = '/Users/ushhamilton/Documents/02 Journals/Locations/'
-time_cap_folder = ""
+
+time_cap_folder = '/Users/ushhamilton/Documents/02_Journals/TimeCapsules'
 
 temp = 'Template.md'
 data_b = 'JournalDatabase.json'
+time_cap_db = 'TimeCapsules.md'
 word_csv = 'DayWords.csv'
 loc_csv = 'Locations.csv'
 
@@ -33,10 +35,13 @@ col_dic = {
     'colour' : 4
 }
 
-life_expectancy = 100   #<- Last year that is shown in the chart.
-weeks_per_year = 52
+life_expectancy = 80   #<- Last year that is shown in the chart.
+standard_weeks_year = 52
+weeks_per_year = 52.17857143  #365.25 / 7
 days_per_week = 7
-dob = '19/01/1992'      #<- Date of birth to be edited.
+dob = '24/05/1994'      #<- Date of birth to be edited.
+
+event = 'Life Event'    #<- The title in the database given to life events
 
 #plotting constants
 radius = 150            #Size of circles on scatter graph
