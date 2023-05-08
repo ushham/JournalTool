@@ -232,6 +232,7 @@ class DataManage:
         return 0
 
     def unique_locs(self, data = None):
+        # //TODO: This function needs to be re-written using pandas or anything!
         def index(location, locs):
             #function to return the index of a given location in the database
             n = 0
@@ -266,6 +267,13 @@ class DataManage:
 
         data_hold = [loc_db[0].replace('\n', '')]
 
+        #If new items are not in list, add to csv
+        for ell in locs:
+            # Parse Location file
+            loc_data = self.parsed_location_file(ell[0] + ".md")
+            new_line = ell[0] + ',' + str(ell[1]) + ',,' + loc_data[0] + "," + loc_data[1] + "," + loc_data[2] + "," + loc_data[3]
+            data_hold.append(new_line)
+
         #Update occurance of items and latest visit
         for ln in loc_db[1:]:
             lns = ln.replace('\n', '').split(',')
@@ -279,14 +287,6 @@ class DataManage:
     
                 data_hold.append(new_line)
                 locs.pop(idx_1)
-
-        #If new items are not in list, add to csv
-        # //TODO: Get information from obsidian file
-        for ell in locs:
-            # Parse Location file
-
-            new_line = ell[0] + ',' + str(ell[1]) + ',,,,,'
-            data_hold.append(new_line)
        
         #Write the data to a new csv
         with open(path, 'w') as doc:
