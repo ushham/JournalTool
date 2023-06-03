@@ -64,7 +64,7 @@ class DataManage:
         #Format the location data
         #This removes the Obsidian backlinking formtting before the text strings are correctly formatted.
         locations = [ell.replace('[[', '').replace(']]', '') for ell in locs.split(', ')]
-        locations = [loc.strip().capitalize() for loc in locations]
+        locations = [loc.strip() for loc in locations]
 
         #Create dictionary
         dic = {
@@ -234,30 +234,47 @@ class DataManage:
         return 0
     
     # New location functions
-    @staticmethod    
-    def latest_visit_at_location(data, location):
-        latest_date = list()
-        for d in data:
-            locs = d["Location"]
-            for l in locs:
-                if l == location:
-                    latest_date.append(d["Date"])
-        
-        #//TODO: There should not be any locations that fail in this way
-        if len(latest_date) > 0:
-            ld = max(latest_date)
-        else:
-            ld = 0
-        return ld
-    
+    # New way to make location db:
+    # - get list of all locs
+    # - get list of all dates
+    # - Find unique locs
+    # - Count # of occurances
+    # - Count largest date
     @staticmethod
-    def number_of_location_occurances(data, location):
-        count = 0
-        for d in data:
-            locs = d["Location"]
-            if location in locs:
-                count += 1
-        return count
+    def location_visit_detatils(loc_occ, date_occ, loc):
+        latest_date = list()
+        for n, l in enumerate(loc_occ):
+            if loc in l:
+                latest_date.append(date_occ[n])
+
+        loc_count = len(latest_date)
+        ld = 0 if loc_count == 0 else max(latest_date)
+        return loc_count, ld
+
+    # @staticmethod    
+    # def latest_visit_at_location(data, location):
+    #     latest_date = list()
+    #     for d in data:
+    #         locs = d["Location"]
+    #         for l in locs:
+    #             if l == location:
+    #                 latest_date.append(d["Date"])
+        
+    #     #//TODO: There should not be any locations that fail in this way
+    #     if len(latest_date) > 0:
+    #         ld = max(latest_date)
+    #     else:
+    #         ld = 0
+    #     return ld
+    
+    # @staticmethod
+    # def number_of_location_occurances(data, location):
+    #     count = 0
+    #     for d in data:
+    #         locs = d["Location"]
+    #         if location in locs:
+    #             count += 1
+    #     return count
 
     def produce_location_database(self, data=None):
         # Fucntion produced a csv that has all the location data
@@ -267,18 +284,21 @@ class DataManage:
         # Find all location .md files remove file extention
         loc_files = [f[:-3] for f in os.listdir(ct.location_folder)]
 
+        all_loc_occurances = [d["Location"] for d in data]
+        all_date_occurances = [d["Date"] for d in data]
+
         #Parse info from each file
         #Header of file
-        location_file = ['Location', 'Occurance', 'Latest_Visit', 'Lat', 'Long', 'City' ,'Country']
+        location_file = list()
+        location_file.append('Location,Occurance,Latest_Visit,Lat,Long,City,Country')
 
         for ell in loc_files:
             loc_data = self.parsed_location_file(ell + ".md")
-            occurance = str(self.number_of_location_occurances(data, ell))
-            latest_visit = str(self.latest_visit_at_location(data, ell))
+            occurance, latest_visit = self.location_visit_detatils(all_loc_occurances, all_date_occurances, ell)
 
-            new_line = ell + ',' + occurance + ',' + latest_visit + ',' + loc_data[0] + ',' + loc_data[1] + ',' + loc_data[2] + ',' + loc_data[3]
+            new_line = ell + ',' + str(occurance) + ',' + str(latest_visit) + ',' + loc_data[0] + ',' + loc_data[1] + ',' + loc_data[2] + ',' + loc_data[3]
             location_file.append(new_line)     
-        print(location_file)
+
         #save the file
         # with open(ct.folder + '/' + ct.loc_csv, 'w') as doc:
         with open(ct.folder + '/' + "test_locs.csv", 'w') as doc:
