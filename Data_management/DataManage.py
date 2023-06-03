@@ -233,13 +233,6 @@ class DataManage:
         
         return 0
     
-    # New location functions
-    # New way to make location db:
-    # - get list of all locs
-    # - get list of all dates
-    # - Find unique locs
-    # - Count # of occurances
-    # - Count largest date
     @staticmethod
     def location_visit_detatils(loc_occ, date_occ, loc):
         latest_date = list()
@@ -250,31 +243,6 @@ class DataManage:
         loc_count = len(latest_date)
         ld = 0 if loc_count == 0 else max(latest_date)
         return loc_count, ld
-
-    # @staticmethod    
-    # def latest_visit_at_location(data, location):
-    #     latest_date = list()
-    #     for d in data:
-    #         locs = d["Location"]
-    #         for l in locs:
-    #             if l == location:
-    #                 latest_date.append(d["Date"])
-        
-    #     #//TODO: There should not be any locations that fail in this way
-    #     if len(latest_date) > 0:
-    #         ld = max(latest_date)
-    #     else:
-    #         ld = 0
-    #     return ld
-    
-    # @staticmethod
-    # def number_of_location_occurances(data, location):
-    #     count = 0
-    #     for d in data:
-    #         locs = d["Location"]
-    #         if location in locs:
-    #             count += 1
-    #     return count
 
     def produce_location_database(self, data=None):
         # Fucntion produced a csv that has all the location data
@@ -307,106 +275,6 @@ class DataManage:
                 doc.write('\n')
             doc.close()
         return 0
-
-    # def unique_locs(self, data = None):
-    #     # This function does the following:
-    #     # - gets all locations from the database
-    #     # - Gets the visit date for each location
-    #     # - finds the latest stay in each loation
-    #     # - 
-
-
-    #     # //TODO: This function needs to be re-written using pandas or anything!
-    #     def index(location, locs):
-    #         #function to return the index of a given location in the database
-    #         n = 0
-    #         check = False
-    #         while not(check):
-    #             check = True if locs[n][0] == location else False
-    #             idx = n if check == True else 0
-    #             n += 1
-            
-    #         return check, idx
-
-    #     if data == None:
-    #         data = self.open_base()
-
-    #     #list locations with occurance where there is no location data in the database
-    #     locs = [ell for els in data for ell in els['Location'] if ell != '']
-    #     visit_date = [[ell, els['Date']] for els in data for ell in els['Location']['Name'] if ell != '']
-        
-    #     locs = list(Counter(locs).items())
-
-    #     #Find the latest stay at each location
-    #     latest_visit = self.latest_visit_at_location(locs, visit_date)
-        
-    #     # for i in locs:
-    #     #     location = i[0]
-    #     #     late_date = max([dl[1] for dl in visit_date if dl[0] == location])
-    #     #     latest_visit.append((location, late_date))
-
-    #     #Open csv database
-    #     path = ct.folder + '/' + ct.loc_csv
-    #     with open(path, 'r') as doc:
-    #         loc_db = doc.readlines()
-
-    #     data_hold = [loc_db[0].replace('\n', '')]
-
-    #     #If new items are not in list, add to csv
-    #     for ell in locs:
-    #         # Parse Location file
-    #         loc_data = self.parsed_location_file(ell[0] + ".md")
-    #         new_line = ell[0] + ',' + str(ell[1]) + ',,' + loc_data[0] + "," + loc_data[1] + "," + loc_data[2] + "," + loc_data[3]
-    #         data_hold.append(new_line)
-
-    #     #Update occurance of items and latest visit
-    #     for ln in loc_db[1:]:
-    #         lns = ln.replace('\n', '').split(',')
-    #         location = lns[0]
-    #         check_1, idx_1 = index(location, locs)
-    #         check_2, idx_2 = index(location, latest_visit)
-    #         if check_1 and check_2:
-    #             lns[1] = str(locs[idx_1][1])
-    #             lns[2] = str(latest_visit[idx_2][1])
-    #             new_line = ','.join(lns)
-    
-    #             data_hold.append(new_line)
-    #             locs.pop(idx_1)
-       
-    #     #Write the data to a new csv
-    #     with open(path, 'w') as doc:
-    #         for ln in data_hold:
-    #             doc.write(ln)
-    #             doc.write('\n')
-    #         doc.close()
-    #     return 0 
-
-    # def update_locs(self):
-    #     data = self.open_base()
-
-    #     #csv of location data
-    #     f = open(ct.folder + '/' + ct.loc_csv)
-    #     reader = csv.reader(f)
-    #     loc_info = list(reader)
-    #     loc_title = [i[0] for i in loc_info]
-    #     for d in data:
-    #         loc = d['Location']['Name']
-    #         if loc[0] != '':
-    #             idxs = [loc_title.index(name) for name in loc]
-
-    #             new_line = {
-    #                 'Name': loc,
-    #                 'Latitude': [loc_info[i][3] for i in idxs],
-    #                 'Longitude': [loc_info[i][4] for i in idxs],
-    #                 'City': [loc_info[i][5] for i in idxs],
-    #                 'Country': [loc_info[i][6] for i in idxs]
-    #             }
-    #             d['Location'] = new_line
-        
-    #     with open(ct.folder + ct.data_b, 'w') as fn:
-    #         json.dump(data, fn)
-            
-    #     return 0
 
     def time_capsule_list(self):
         def time_to_open(date):
