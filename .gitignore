@@ -1,0 +1,10 @@
+.DS_Store
+Old_txt_correction.py
+*.json
+*.pyc
+Database_discover.py
+Wordcloud.py
+tag_conversion.py
+*__pycache__*
+control/control.py
+Life_in_weeks/
