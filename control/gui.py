@@ -272,7 +272,8 @@ class gui:
     def mk_db(self):
         #Refresh database and refresh gui
         self.datar.updt_base()
-        self.datar.update_locs()
+        # self.datar.update_locs()
+        self.datar.produce_location_database()
         self.datar.time_capsule_list()
         self.window.destroy()
         self.__init__()

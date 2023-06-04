@@ -1,6 +1,5 @@
 import json
 import os
-import csv
 import datetime as dt
 import control.control as ct
 from collections import Counter
@@ -91,9 +90,9 @@ class DataManage:
             elif self.lon in ln:
                 temp_lon = ''.join(ln.replace(self.lon, "").split())
             elif self.city in ln:
-                temp_city = ''.join(ln.replace(self.city, "").split())
+                temp_city = ln.replace(self.city, "").replace("\n","")
             elif self.country in ln:
-                temp_country = ''.join(ln.replace(self.country, "").split())
+                temp_country = ln.replace(self.country, "").replace("\n","")
 
         return temp_lat, temp_lon, temp_city, temp_country
 
@@ -258,20 +257,22 @@ class DataManage:
         #Parse info from each file
         #Header of file
         location_file = list()
-        location_file.append('Location,Occurance,Latest_Visit,Lat,Long,City,Country')
 
         for ell in loc_files:
             loc_data = self.parsed_location_file(ell + ".md")
             occurance, latest_visit = self.location_visit_detatils(all_loc_occurances, all_date_occurances, ell)
 
-            new_line = ell + ',' + str(occurance) + ',' + str(latest_visit) + ',' + loc_data[0] + ',' + loc_data[1] + ',' + loc_data[2] + ',' + loc_data[3]
-            location_file.append(new_line)     
+            entry = [ell, str(occurance), latest_visit, loc_data[0], loc_data[1], loc_data[2], loc_data[3]]
+            location_file.append(entry) 
 
+        # Sort the list to have "Latest_visit" as most recent
+        location_file.sort(key=lambda lf: lf[2], reverse=False)
+        location_file.insert(0, ['Location', 'Occurance', 'Latest_Visit', 'Lat', 'Long', 'City', 'Country'])
+        
         #save the file
-        # with open(ct.folder + '/' + ct.loc_csv, 'w') as doc:
-        with open(ct.folder + '/' + "test_locs.csv", 'w') as doc:
+        with open(ct.folder + '/' + ct.loc_csv, 'w') as doc:
             for ln in location_file:
-                doc.write(ln)
+                doc.write(','.join(ln))
                 doc.write('\n')
             doc.close()
         return 0
