@@ -138,7 +138,7 @@ class DataManage:
         completed = [f for f in files if f.replace(ct.folder, '') not in prev]
         for f in completed:
             if (ct.temp not in f) and (ct.temp_folder not in f) and (ct.time_cap_db not in f):
-                newd = open("file to open" + f)
+                newd = open(f)
                 line = self.parse_data(f, newd)
                 data.append(line)
 
