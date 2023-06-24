@@ -36,6 +36,7 @@ class DataManage:
 
         lines = data.readlines()
         count = 0
+        word_count = 0
         for line in lines:
             count += 1
             #Extract journal status
@@ -59,7 +60,11 @@ class DataManage:
 
             elif self.location in line:
                 locs = line.replace(self.location, '')
-        
+
+            else:
+                # Assumes line is a journal entry if no header is given
+                word_count += len(line.split())
+                
         #Format the location data
         #This removes the Obsidian backlinking formtting before the text strings are correctly formatted.
         locations = [ell.replace('[[', '').replace(']]', '') for ell in locs.split(', ')]
@@ -74,7 +79,8 @@ class DataManage:
             'Tags': [t.strip().capitalize() for t in tag.split('#') if t.strip() != ''],
             'Mood': [m.strip().capitalize() for m in mod.split(', ')],
             'Score': score,
-            'Location': locations
+            'Location': locations,
+            'Word_count': word_count
             }
         return dic
 

@@ -163,17 +163,32 @@ class Visualise:
         self.graph_use(data, status, month_list(start_date, end_date))
 
         return 0
+    
+    def word_counts(self):
+        data = self.manage_data.open_base()
+
+        # (Date, word count) tuple
+        date_word_count = [(dt.datetime.strptime(d['Date'], '%Y-%m-%d'), d['Word_count']) for d in data]
+        
+        # Sort dates
+        
+        # Average per month
+        
+        # Average per year
+        
+
+        return 0
 
     def all_journals(self):
         #Produces a timeline of when journals were made for each year
         #Open database
         data = self.manage_data.open_base()
         
-        #Find all dates in database
+        # Find all dates in database
         dates = [dt.datetime.strptime(d['Date'], '%Y-%m-%d') for d in data]
         dates.sort()
      
-        #Format data into (date, date + 1, year as str)
+        # Format data into (date, date + 1, year as str)
         min_year, max_year, date_len = min(dates).year, max(dates).year, len(dates)
 
         date_hold = []
