@@ -12,10 +12,10 @@ class DataManage:
     feel = 'Score:'
     location = 'Location:'
 
-    lat = "Latitude::"
-    lon = "Longitude::"
-    city = "City::"
-    country = "Country::"
+    lat = "Latitude:"
+    lon = "Longitude:"
+    city = "City:"
+    country = "Country:"
 
     def listall(self):
         #List all files in subfolders
@@ -251,7 +251,7 @@ class DataManage:
 
     def produce_location_database(self, data=None):
         # Fucntion produced a csv that has all the location data
-        if data == None:
+        if data is None:
             data = self.open_base()
 
         # Find all location .md files remove file extention
