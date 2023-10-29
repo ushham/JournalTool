@@ -1,7 +1,7 @@
 import datetime as dt
-import File_management.FileManage as fm
-import Data_management.DataManage as dm
-import control.control as ct
+import src.File_management.FileManage as fm
+import src.Data_management.DataManage as dm
+import src.control.control as ct
 
 class FileMake:
     filer = fm.FileManage()

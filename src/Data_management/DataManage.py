@@ -1,7 +1,7 @@
 import json
 import os
 import datetime as dt
-import control.control as ct
+import src.control.control as ct
 from collections import Counter
 
 class DataManage:

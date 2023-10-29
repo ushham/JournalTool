@@ -2,7 +2,7 @@ import os
 import datetime as dt
 import subprocess
 import shutil
-import control.control as ct
+import src.control.control as ct
 
 class FileManage:
 
